@@ -33,9 +33,8 @@ export class Home extends Component {
         <View style={styles.Main}>
           {this.state.shelves.map((shelf) => {
             return (
-              <>
+              <View key={shelf.id}>
                 <Text
-                  key={shelf.id}
                   style={{
                     fontWeight: "bold",
                     fontSize: 20,
@@ -94,7 +93,7 @@ export class Home extends Component {
                     );
                   })}
                 </ScrollView>
-              </>
+              </View>
             );
           })}
 
