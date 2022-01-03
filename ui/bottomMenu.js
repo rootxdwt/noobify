@@ -4,7 +4,7 @@ import {
   View,
   ScrollView,
   Button,
-  TouchableWithoutFeedback,
+  Pressable,
 } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -31,7 +31,6 @@ export class BottomMenu extends Component {
   }
 
   menuButtonPress(obj) {
-    console.log(obj);
     var lst = [1, 1, 1];
     lst[obj] = 0;
     this.setState({ Active: lst });
@@ -40,23 +39,23 @@ export class BottomMenu extends Component {
   render() {
     return (
       <View style={styles.BottomMenu}>
-        <TouchableWithoutFeedback onPress={() => this.menuButtonPress(0)}>
+        <Pressable onPressIn={() => this.menuButtonPress(0)}>
           <View style={styles.Button}>
             <Text style={{ color: "#fff", fontSize: 18 }}>
               {icons.Home[this.state.Active[0]]}
             </Text>
             <Text style={{ color: "#fff", fontSize: 10 }}>Home</Text>
           </View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => this.menuButtonPress(1)}>
+        </Pressable>
+        <Pressable onPressIn={() => this.menuButtonPress(1)}>
           <View style={styles.Button}>
             <Text style={{ color: "#fff", fontSize: 18 }}>
               {icons.Search[this.state.Active[1]]}
             </Text>
             <Text style={{ color: "#fff", fontSize: 10 }}>Search</Text>
           </View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => this.menuButtonPress(1)}>
+        </Pressable>
+        <Pressable onPressIn={() => this.menuButtonPress(1)}>
           <View style={styles.Button}>
             <Text
               style={{ color: "#fff", fontSize: 18 }}
@@ -66,7 +65,7 @@ export class BottomMenu extends Component {
             </Text>
             <Text style={{ color: "#fff", fontSize: 10 }}>My</Text>
           </View>
-        </TouchableWithoutFeedback>
+        </Pressable>
       </View>
     );
   }
@@ -79,7 +78,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#363636",
     alignItems: "center",
     justifyContent: "space-around",
-    position: "absolute",
     bottom: 0,
     width: "100%",
     height: 91,
@@ -91,5 +89,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "transparent",
+    zIndex: 1,
   },
 });

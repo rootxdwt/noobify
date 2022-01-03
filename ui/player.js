@@ -93,6 +93,7 @@ export class Player extends Component {
   }
 
   render() {
+    console.log(this.state.bottom);
     return (
       <View
         style={{
@@ -103,7 +104,7 @@ export class Player extends Component {
           borderRadius: this.state.borderRadius,
           backgroundColor: `#364954`,
           position: "absolute",
-          bottom: this.state.bottom,
+          bottom: 101,
           overflow: "hidden",
           zIndex: 1,
         }}
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
     width: "95%",
     borderRadius: 8,
     backgroundColor: "rgba(255, 255, 255, 0.15)",
-    position: "absolute",
+    // position: "absolute",
     bottom: 101,
     overflow: "hidden",
   },
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 0,
     backgroundColor: "rgba(255, 255, 255, 0.15)",
-    position: "absolute",
+    // position: "absolute",
     bottom: 0,
     zIndex: 1,
     overflow: "hidden",
