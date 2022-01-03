@@ -70,6 +70,7 @@ export class Home extends Component {
                           }}
                         >
                           <Text
+                            numberOfLines={1}
                             style={{
                               fontWeight: "bold",
                               color: "#fff",
