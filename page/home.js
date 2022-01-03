@@ -13,15 +13,23 @@ export class Home extends Component {
   }
 
   componentDidMount = async () => {
+    this.mounted = true;
     const {
       data: { shelves },
-    } = await api.get("/recommendations");
-    this.setState({ shelves });
+    } = await api.get("/recommendations", {
+      timeout: 10000,
+    });
+    console.log("[Shelves]", "Fetched");
+    if (this.mounted) this.setState({ shelves });
+  };
+
+  componentWillUnmount = () => {
+    this.mounted = false;
   };
 
   render() {
     return (
-      <>
+      <ScrollView>
         <View style={styles.Header}>
           <Text style={{ fontWeight: "bold", fontSize: 25, color: "#fff" }}>
             Noobify
@@ -33,9 +41,8 @@ export class Home extends Component {
         <View style={styles.Main}>
           {this.state.shelves.map((shelf) => {
             return (
-              <>
+              <View key={shelf.id}>
                 <Text
-                  key={shelf.id}
                   style={{
                     fontWeight: "bold",
                     fontSize: 20,
@@ -95,7 +102,7 @@ export class Home extends Component {
                     );
                   })}
                 </ScrollView>
-              </>
+              </View>
             );
           })}
 
@@ -278,7 +285,7 @@ export class Home extends Component {
 
           <View style={{ height: 200 }}></View>
         </View>
-      </>
+      </ScrollView>
     );
   }
 }
