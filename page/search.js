@@ -124,7 +124,23 @@ export class Search extends Component {
               >
                 Top Results
               </Text>
-            )}
+            ) || (
+              <View style={{flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center'}}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    color: "#fff",
+                    alignSelf: "flex-start",
+                    margin: 10,
+                    marginTop: 5,
+                  }}
+                >
+                  No Results
+                </Text>
+              </View>
+            )
+            }
             {this.state.total.map((item) => {
               if (item.type == "artist") {
                 return (
