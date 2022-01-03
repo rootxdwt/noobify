@@ -188,7 +188,7 @@ export class Search extends Component {
                 );
               }
             })}
-            {this.state.total.length > 0 && (
+            {this.state.songs.length > 0 && (
               <Text
                 style={{
                   fontWeight: "bold",
@@ -211,6 +211,84 @@ export class Search extends Component {
                   description={`Song • ${item.artists
                     .map((artist) => artist.name)
                     .join(", ")}`}
+                />
+              );
+            })}
+            {this.state.albums.length > 0 && (
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  color: "#fff",
+                  alignSelf: "flex-start",
+                  margin: 10,
+                  marginTop: 5,
+                }}
+              >
+                Albums
+              </Text>
+            )}
+            {this.state.albums.map((item) => {
+              return (
+                <Item
+                  key={item.id}
+                  title={item.name}
+                  image={item.cover[0].url}
+                  description={`Album • ${item.artists
+                    .map((artist) => artist.name)
+                    .join(", ")}`}
+                />
+              );
+            })}
+            {this.state.artists.length > 0 && (
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  color: "#fff",
+                  alignSelf: "flex-start",
+                  margin: 10,
+                  marginTop: 5,
+                }}
+              >
+                Artists
+              </Text>
+            )}
+            {this.state.artists.map((item) => {
+              return (
+                <Item
+                  key={item.id}
+                  title={item.name}
+                  image={
+                    item.avatar.length > 0
+                      ? item.avatar[0].url
+                      : "https://media.istockphoto.com/vectors/people-icon-person-icon-user-icon-in-trendy-flat-style-isolated-on-vector-id1166184350?k=20&m=1166184350&s=170667a&w=0&h=-OcfPNeTuiR5dJNM6ahYx3PgxevGi00akHF1J_Dq-rA="
+                  }
+                  description={`Artist`}
+                />
+              );
+            })}
+            {this.state.playlists.length > 0 && (
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  color: "#fff",
+                  alignSelf: "flex-start",
+                  margin: 10,
+                  marginTop: 5,
+                }}
+              >
+                Playlists
+              </Text>
+            )}
+            {this.state.playlists.map((item) => {
+              return (
+                <Item
+                  key={item.id}
+                  title={item.name}
+                  image={item.cover[0].url}
+                  description={`Playlist`}
                 />
               );
             })}
