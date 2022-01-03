@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   Header: {
-    marginTop: 60,
+    marginTop: 30,
     width: "100%",
     flexDirection: "column",
     alignItems: "flex-start",

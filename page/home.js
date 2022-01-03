@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     marginLeft: 0,
   },
   Header: {
-    marginTop: 60,
+    marginTop: 30,
     width: "100%",
     flex: 1,
     flexDirection: "row",
