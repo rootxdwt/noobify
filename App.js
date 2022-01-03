@@ -4,7 +4,14 @@ import { BottomMenu } from "./ui/bottomMenu.js";
 import { Home } from "./page/home.js";
 import { Search } from "./page/search.js";
 import { My } from "./page/my.js";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  StatusBar,
+  SafeAreaView,
+} from "react-native";
 
 const pages = [<Home></Home>, <Search></Search>, <My></My>];
 
@@ -19,14 +26,15 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <View style={styles.ParentContainer}>
+      <SafeAreaView style={styles.ParentContainer}>
+        <StatusBar barStyle="light-content" backgroundColor="#262626" />
         {pages[this.state.currentPage]}
 
         <View style={styles.Container}>
           <Player></Player>
           <BottomMenu setPage={this.setPage}></BottomMenu>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
