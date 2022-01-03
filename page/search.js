@@ -119,6 +119,7 @@ export class Search extends Component {
         </View>
         <View style={{ height: "70%" }}>
           <ScrollView contentContainerStyle={styles.Main}>
+            <View style={{ height: 10 }}></View>
             {(this.state.total.length > 0 && (
               <Text
                 style={{
