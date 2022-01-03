@@ -47,6 +47,7 @@ export class Search extends Component {
     albums: [],
     playlists: [],
     songs: [],
+    isRequesting: false,
   };
   lastTyping = 0;
 
@@ -64,9 +65,13 @@ export class Search extends Component {
           albums: album,
           playlists,
           songs,
+          isRequesting: false,
         });
       })
       .catch((err) => {
+        this.setState({
+          isRequesting: false,
+        });
         console.log("[Search]", "Failed", this.state.query);
       });
   };
@@ -82,6 +87,9 @@ export class Search extends Component {
         songs: [],
       });
     } else {
+      this.setState({
+        isRequesting: true,
+      });
       this.lastTyping = Date.now();
       setTimeout(() => {
         if (Date.now() - this.lastTyping > 500) {
@@ -111,7 +119,7 @@ export class Search extends Component {
         </View>
         <View style={{ height: "70%" }}>
           <ScrollView contentContainerStyle={styles.Main}>
-            {this.state.total.length > 0 && (
+            {(this.state.total.length > 0 && (
               <Text
                 style={{
                   fontWeight: "bold",
@@ -124,23 +132,32 @@ export class Search extends Component {
               >
                 Top Results
               </Text>
-            ) || (
-              <View style={{flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center'}}>
-                <Text
+            )) ||
+              (this.state.query &&
+              !this.state.isRequesting &&
+              this.state.query !== "" ? (
+                <View
                   style={{
-                    fontWeight: "bold",
-                    fontSize: 20,
-                    color: "#fff",
-                    alignSelf: "flex-start",
-                    margin: 10,
-                    marginTop: 5,
+                    flex: 1,
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  No Results
-                </Text>
-              </View>
-            )
-            }
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 20,
+                      color: "#fff",
+                      alignSelf: "center",
+                      margin: 10,
+                      marginTop: 5,
+                    }}
+                  >
+                    No Results
+                  </Text>
+                </View>
+              ) : null)}
             {this.state.total.map((item) => {
               if (item.type == "artist") {
                 return (
