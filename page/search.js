@@ -106,6 +106,7 @@ export class Search extends Component {
             style={styles.SearchBar}
             onChangeText={this.onQueryChange}
             value={this.state.query}
+            placeholder="Search Artist, Song Or An Album"
           />
         </View>
         <View style={{ height: "70%" }}>
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "space-between",
     padding: 25,
     paddingLeft: 12,
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
   SearchBar: {
     height: 40,
     margin: 10,
-    width: "100%",
+    width: '99%',
     padding: 10,
     backgroundColor: "#fff",
     borderRadius: 10,
