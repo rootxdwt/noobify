@@ -29,7 +29,7 @@ export class Home extends Component {
 
   render() {
     return (
-      <>
+      <ScrollView>
         <View style={styles.Header}>
           <Text style={{ fontWeight: "bold", fontSize: 25, color: "#fff" }}>
             Noobify
@@ -284,7 +284,7 @@ export class Home extends Component {
 
           <View style={{ height: 200 }}></View>
         </View>
-      </>
+      </ScrollView>
     );
   }
 }

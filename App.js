@@ -20,7 +20,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.ParentContainer}>
-        <ScrollView>{pages[this.state.currentPage]}</ScrollView>
+        {pages[this.state.currentPage]}
 
         <View style={styles.Container}>
           <Player></Player>
