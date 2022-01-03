@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import audioLibrary from "../audio";
 
 var playpause = [
   <Icon name="play" size={18} />,
@@ -29,23 +30,55 @@ export class Player extends Component {
       borderRadius: 8,
       width: 0.95,
       draggedPercentage: 0,
+      queue: [],
+      index: 0,
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
     this.interfaceX = Dimensions.get("window").width;
   }
 
+  componentDidMount() {
+    audioLibrary.registerStatusUpdateReciver(this.statusHandler);
+  }
+
+  componentWillUnmount() {
+    audioLibrary.unregisterStatusUpdateReciver(this.statusHandler);
+  }
+
+  statusHandler = (status) => {
+    this.setState({
+      play: status.isPlaying === true ? 1 : 0,
+      queue: audioLibrary.getQueue(),
+      index: audioLibrary.getIndex(),
+    });
+  };
+
+  previous() {
+    console.log("[Player]", "Previous track");
+    if (this.state.index > 0) {
+      audioLibrary.back();
+    }
+  }
+
+  next() {
+    console.log("[Player]", "Next track");
+    if (this.state.queue.length > this.state.index + 1) {
+      audioLibrary.skip();
+    }
+  }
+
   togglePlay() {
     var n;
     switch (this.state.play) {
       case 1:
-        n = 0;
+        n = false;
         break;
       case 0:
-        n = 1;
+        n = true;
         break;
     }
-    this.setState({ play: n });
+    audioLibrary.setPlaying(n);
   }
 
   startMove(e) {
@@ -233,7 +266,14 @@ export class Player extends Component {
                 justifyContent: "center",
               }}
             >
-              <Text style={{ color: "#fff" }}>
+              <Text
+                style={
+                  0 < this.state.index
+                    ? { color: "#fff" }
+                    : { color: "#505050" }
+                }
+                onPress={() => this.previous()}
+              >
                 <Icon name="backward" size={25}></Icon>
               </Text>
               <Text
@@ -242,8 +282,18 @@ export class Player extends Component {
               >
                 {largeplaypause[this.state.play]}
               </Text>
-              <Text style={{ color: "#fff" }}>
-                <Icon name="forward" size={25}></Icon>
+              <Text
+                style={
+                  this.state.queue.length > this.state.index + 1
+                    ? { color: "#fff" }
+                    : { color: "#505050" }
+                }
+              >
+                <Icon
+                  name="forward"
+                  size={25}
+                  onPress={() => this.next()}
+                ></Icon>
               </Text>
             </View>
           </View>

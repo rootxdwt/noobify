@@ -1,4 +1,5 @@
 import { Audio } from "expo-av";
+import api from "../api";
 
 let sound = null;
 let queues = [];
@@ -6,6 +7,8 @@ let caches = {};
 let isPlaying = false;
 let loopingMode = "none";
 let currentIndex = 0;
+
+let loaded = false;
 
 // Handlers
 let queueUpdateRecivers = [];
@@ -24,6 +27,9 @@ const checkAvailable = async (id) => {
 const _playbackStatusUpdate = async (status) => {
   statusUpdateRecivers.forEach((reciever) => reciever(status));
   if (status.didJustFinish) {
+    if (loaded) {
+      await _unloadAudio();
+    }
     if (loopingMode === "none") {
       currentIndex++;
       if (currentIndex >= queues.length) {
@@ -66,24 +72,39 @@ const getPlaying = () => {
 const setPlaying = async (playing) => {
   isPlaying = playing;
   if (playing) {
+    if (queues.length === 0) {
+      throw new Error("No queues to play");
+    }
+    if (loaded === false) {
+      await _loadAudio(queues[currentIndex]);
+    }
+    console.log("[Sound]", "Playing");
     await sound.playAsync();
   } else {
+    console.log("[Sound]", "Pausing");
     await sound.pauseAsync();
   }
 };
 
 const stopPlaying = async () => {
+  console.log("[Sound]", "Stopping");
   await sound.stopAsync();
 };
 
 const _loadAudio = async (id) => {
+  loaded = true;
   if (!(await checkAvailable(id))) {
     queues = queues.filter((q) => q !== id);
-    return false;
+    queueUpdateRecivers.forEach((reciever) => reciever(queues));
+    if (queues.length <= currentIndex) {
+      throw new Error("No queues to play");
+    }
+    return _loadAudio(queues[currentIndex]);
   }
   await Audio.setAudioModeAsync({
     staysActiveInBackground: true,
   });
+  console.log("[Sound]", "Loading", id);
   await sound.loadAsync(
     {
       uri: `https://api.noobify.workers.dev/song/${id}/audio`,
@@ -94,8 +115,15 @@ const _loadAudio = async (id) => {
   return true;
 };
 
+const _unloadAudio = async () => {
+  loaded = false;
+  console.log("[Sound]", "Unloading");
+  await sound.unloadAsync();
+};
+
 const setQueue = (newQueue) => {
   queues = newQueue;
+  queueUpdateRecivers.forEach((reciever) => reciever(queues));
 };
 
 const getQueue = () => {
@@ -108,7 +136,11 @@ const skip = async () => {
     currentIndex--;
     throw Error("You can't skip to the next song, there is no next song");
   }
+  if (loaded) {
+    await _unloadAudio();
+  }
   await _loadAudio(queues[currentIndex]);
+  await sound.playAsync();
 };
 
 const back = async () => {
@@ -119,7 +151,11 @@ const back = async () => {
       "You can't skip to the previous song, there is no previous song"
     );
   }
+  if (loaded) {
+    await _unloadAudio();
+  }
   await _loadAudio(queues[currentIndex]);
+  await sound.playAsync();
 };
 
 const getIndex = () => {
@@ -146,13 +182,20 @@ const registerStatusUpdateReciver = (reciever) => {
   statusUpdateRecivers.push(reciever);
 };
 
-exports = {
+const unregisterQueueUpdateReciver = (reciever) => {
+  queueUpdateRecivers = queueUpdateRecivers.filter((r) => r !== reciever);
+};
+
+const unregisterStatusUpdateReciver = (reciever) => {
+  statusUpdateRecivers = statusUpdateRecivers.filter((r) => r !== reciever);
+};
+
+module.exports = {
   getSound,
   setSound,
   getPlaying,
   setPlaying,
   stopPlaying,
-  getQueue,
   setQueue,
   skip,
   back,
@@ -160,6 +203,10 @@ exports = {
   setPosition,
   registerQueueUpdateReciver,
   registerStatusUpdateReciver,
+  unregisterQueueUpdateReciver,
+  unregisterStatusUpdateReciver,
   setLoopingMode,
   getLoopingMode,
 };
+
+console.log("[Sound]", "Initialized sound");

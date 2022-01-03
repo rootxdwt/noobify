@@ -12,7 +12,8 @@ import {
   StatusBar,
   SafeAreaView,
 } from "react-native";
-import api from "./api";
+import { Audio } from "expo-av";
+import audioLibrary from "./audio";
 
 const pages = [<Home></Home>, <Search></Search>, <My></My>];
 
@@ -21,15 +22,20 @@ export default class App extends React.Component {
     currentPage: 0,
   };
 
-  // componentDidMount() {
-  //   if (!this.sound) {
-  //     this.loadAudio("2qd4cLpENPf0gBia8WFi0m").then(() => {
-  //       console.log("loaded");
-  //       this.sound.playAsync();
-  //     });
-  //     console.log(sound);
-  //   }
-  // }
+  componentDidMount() {
+    const sound = audioLibrary.getSound();
+    if (sound === null) {
+      console.log("[App]", "No sound found");
+      audioLibrary.setSound(new Audio.Sound());
+      audioLibrary.setQueue([
+        "5nCwjUUsmBuNZKn9Xu10Os",
+        "2g0LdZQce9xlcHb1mBJyuz",
+        "4as4XEOR03oGm1STUKl6pa",
+      ]);
+    } else {
+      console.log("[App]", "Sound already registered");
+    }
+  }
 
   getSound = async () => {
     return this.state.sound;
