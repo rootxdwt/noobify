@@ -12,12 +12,27 @@ import {
   StatusBar,
   SafeAreaView,
 } from "react-native";
+import api from "./api";
 
 const pages = [<Home></Home>, <Search></Search>, <My></My>];
 
 export default class App extends React.Component {
   state = {
     currentPage: 0,
+  };
+
+  // componentDidMount() {
+  //   if (!this.sound) {
+  //     this.loadAudio("2qd4cLpENPf0gBia8WFi0m").then(() => {
+  //       console.log("loaded");
+  //       this.sound.playAsync();
+  //     });
+  //     console.log(sound);
+  //   }
+  // }
+
+  getSound = async () => {
+    return this.state.sound;
   };
 
   setPage = (page) => {
