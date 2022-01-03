@@ -1,9 +1,13 @@
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 
 export class My extends Component {
   render() {
-    return <ScrollView style={styles.Main}>My</ScrollView>;
+    return (
+      <View>
+        <Text>My</Text>
+      </View>
+    );
   }
 }
 

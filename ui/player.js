@@ -93,7 +93,6 @@ export class Player extends Component {
   }
 
   render() {
-    console.log(this.state.bottom);
     return (
       <View
         style={{
@@ -104,7 +103,7 @@ export class Player extends Component {
           borderRadius: this.state.borderRadius,
           backgroundColor: `#364954`,
           position: "absolute",
-          bottom: 101,
+          bottom: this.state.bottom,
           overflow: "hidden",
           zIndex: 1,
         }}

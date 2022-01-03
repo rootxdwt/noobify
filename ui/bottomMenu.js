@@ -34,6 +34,7 @@ export class BottomMenu extends Component {
     var lst = [1, 1, 1];
     lst[obj] = 0;
     this.setState({ Active: lst });
+    this.props.setPage(obj);
   }
 
   render() {

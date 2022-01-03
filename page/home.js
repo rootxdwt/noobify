@@ -13,10 +13,18 @@ export class Home extends Component {
   }
 
   componentDidMount = async () => {
+    this.mounted = true;
     const {
       data: { shelves },
-    } = await api.get("/recommendations");
-    this.setState({ shelves });
+    } = await api.get("/recommendations", {
+      timeout: 10000,
+    });
+    console.log("[Shelves]", "Fetched");
+    if (this.mounted) this.setState({ shelves });
+  };
+
+  componentWillUnmount = () => {
+    this.mounted = false;
   };
 
   render() {
