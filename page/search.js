@@ -97,7 +97,7 @@ export class Search extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{ height: "100%" }}>
         <View style={styles.Header}>
           <Text style={{ fontWeight: "bold", fontSize: 25, color: "#fff" }}>
             Search
@@ -111,7 +111,6 @@ export class Search extends Component {
         </View>
         <View style={{ height: "70%" }}>
           <ScrollView contentContainerStyle={styles.Main}>
-            {/* Total */}
             {this.state.total.length > 0 && (
               <Text
                 style={{
@@ -173,7 +172,6 @@ export class Search extends Component {
                 );
               }
             })}
-            {/* Songs */}
             {this.state.total.length > 0 && (
               <Text
                 style={{
@@ -200,7 +198,7 @@ export class Search extends Component {
                 />
               );
             })}
-            <View style={{ height: 50 }}></View>
+            <View style={{ height: 100 }}></View>
           </ScrollView>
         </View>
       </View>
@@ -218,13 +216,14 @@ const styles = StyleSheet.create({
   Header: {
     marginTop: 60,
     width: "100%",
-    flex: 1,
     flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "space-between",
     padding: 25,
     paddingLeft: 12,
     paddingRight: 12,
+    height: 150,
+    paddingBottom: 0,
   },
   Content: {
     width: "100%",
@@ -242,7 +241,7 @@ const styles = StyleSheet.create({
   SearchBar: {
     height: 40,
     margin: 10,
-    width: '99%',
+    width: "99%",
     padding: 10,
     backgroundColor: "#fff",
     borderRadius: 10,
