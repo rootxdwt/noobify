@@ -94,154 +94,169 @@ export class Player extends Component {
 
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "column",
-          width: this.state.width * 100 + "%",
-          height: this.state.height,
-          borderRadius: this.state.borderRadius,
-          backgroundColor: `#364954`,
-          position: "absolute",
-          bottom: this.state.bottom,
-          overflow: "hidden",
-          zIndex: 1,
-        }}
-        onMoveShouldSetResponder={() => true}
-        onResponderGrant={(e) => this.startMove(e)}
-        onResponderMove={(e) => this.Move(e)}
-        onResponderRelease={(e) => this.Release(e)}
-      >
+      <>
+        <View
+          style={{
+            backgroundColor: "transparent",
+            width: "100%",
+            height: this.state.height,
+            bottom: this.state.bottom,
+          }}
+        ></View>
         <View
           style={{
             flex: 1,
-            flexDirection: "row",
-            height: "100%",
-            alignItems: "center",
-            justifyContent: "center",
+            flexDirection: "column",
+            width: this.state.width * 100 + "%",
+            height: this.state.height,
+            borderRadius: this.state.borderRadius,
+            backgroundColor: `#364954`,
+            position: "absolute",
+            bottom: this.state.bottom,
+            overflow: "hidden",
+            zIndex: 1,
           }}
+          onMoveShouldSetResponder={() => true}
+          onResponderGrant={(e) => this.startMove(e)}
+          onResponderMove={(e) => this.Move(e)}
+          onResponderRelease={(e) => this.Release(e)}
         >
-          <Image
+          <View
             style={{
-              height:
-                40 + (this.interfaceX - 150) * this.state.draggedPercentage,
-              width:
-                40 + (this.interfaceX - 150) * this.state.draggedPercentage,
-              marginLeft: this.state.maximized
-                ? (this.interfaceX -
-                    (40 +
-                      (this.interfaceX - 150) * this.state.draggedPercentage)) /
-                  2
-                : 7,
-              marginTop: 300 * this.state.draggedPercentage,
-              borderRadius: 8,
-              marginRight: 10,
+              flex: 1,
+              flexDirection: "row",
+              height: "100%",
+              alignItems: "center",
+              justifyContent: "center",
             }}
-            source={{
-              uri: "https://cdn.xdcs.me/static/main/1000x1000-000000-80-0-0.jpg",
-            }}
-          ></Image>
+          >
+            <Image
+              style={{
+                height:
+                  40 + (this.interfaceX - 150) * this.state.draggedPercentage,
+                width:
+                  40 + (this.interfaceX - 150) * this.state.draggedPercentage,
+                marginLeft: this.state.maximized
+                  ? (this.interfaceX -
+                      (40 +
+                        (this.interfaceX - 150) *
+                          this.state.draggedPercentage)) /
+                    2
+                  : 7,
+                marginTop: 300 * this.state.draggedPercentage,
+                borderRadius: 8,
+                marginRight: 10,
+              }}
+              source={{
+                uri: "https://cdn.xdcs.me/static/main/1000x1000-000000-80-0-0.jpg",
+              }}
+            ></Image>
 
-          <View style={styles.SongInfo}>
+            <View style={styles.SongInfo}>
+              <Text
+                style={{
+                  color: "#fff",
+                  fontWeight: "bold",
+                  opacity: 1 - this.state.draggedPercentage,
+                }}
+              >
+                러브래터
+              </Text>
+              <Text
+                style={{
+                  color: "#fff",
+                  opacity: 1 - this.state.draggedPercentage,
+                }}
+              >
+                아이유
+              </Text>
+            </View>
+            <View style={{ marginRight: 18 }}>
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 13,
+                  opacity: 1 - this.state.draggedPercentage,
+                }}
+                onPress={() => this.togglePlay()}
+              >
+                {playpause[this.state.play]}
+              </Text>
+            </View>
+          </View>
+
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              padding: 0,
+              margin: 0,
+              bottom: 0,
+              marginTop: 300 * this.state.draggedPercentage,
+              display: this.state.maximized ? "flex" : "none",
+            }}
+          >
             <Text
               style={{
                 color: "#fff",
+                fontSize: 25,
                 fontWeight: "bold",
-                opacity: 1 - this.state.draggedPercentage,
+                opacity: this.state.draggedPercentage,
               }}
             >
-              러브래터
+              러브레터
             </Text>
             <Text
               style={{
                 color: "#fff",
-                opacity: 1 - this.state.draggedPercentage,
+                fontSize: 15,
+                opacity: this.state.draggedPercentage,
               }}
             >
               아이유
             </Text>
-          </View>
-          <View style={{ marginRight: 18 }}>
-            <Text
+            <View
               style={{
-                color: "#fff",
-                fontSize: 13,
-                opacity: 1 - this.state.draggedPercentage,
+                width: "80%",
+                height: 2,
+                backgroundColor: "#fff",
+                opacity: this.state.draggedPercentage,
+                margin: 30,
               }}
-              onPress={() => this.togglePlay()}
+            ></View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "center",
+              }}
             >
-              {playpause[this.state.play]}
-            </Text>
+              <Text style={{ color: "#fff" }}>
+                <Icon name="backward" size={25}></Icon>
+              </Text>
+              <Text
+                onPress={() => this.togglePlay()}
+                style={{ color: "#fff", marginLeft: 50, marginRight: 50 }}
+              >
+                {largeplaypause[this.state.play]}
+              </Text>
+              <Text style={{ color: "#fff" }}>
+                <Icon name="forward" size={25}></Icon>
+              </Text>
+            </View>
           </View>
-        </View>
-
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            padding: 0,
-            margin: 0,
-            bottom: 0,
-            marginTop: 300 * this.state.draggedPercentage,
-            display: this.state.maximized ? "flex" : "none",
-          }}
-        >
-          <Text
-            style={{
-              color: "#fff",
-              fontSize: 25,
-              fontWeight: "bold",
-              opacity: this.state.draggedPercentage,
-            }}
-          >
-            러브레터
-          </Text>
-          <Text
-            style={{
-              color: "#fff",
-              fontSize: 15,
-              opacity: this.state.draggedPercentage,
-            }}
-          >
-            아이유
-          </Text>
           <View
             style={{
-              width: "80%",
+              width: "100%",
               height: 2,
               backgroundColor: "#fff",
-              opacity: this.state.draggedPercentage,
-              margin: 30,
+              opacity: 1 - this.state.draggedPercentage,
             }}
           ></View>
-          <View
-            style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}
-          >
-            <Text style={{ color: "#fff" }}>
-              <Icon name="backward" size={25}></Icon>
-            </Text>
-            <Text
-              onPress={() => this.togglePlay()}
-              style={{ color: "#fff", marginLeft: 50, marginRight: 50 }}
-            >
-              {largeplaypause[this.state.play]}
-            </Text>
-            <Text style={{ color: "#fff" }}>
-              <Icon name="forward" size={25}></Icon>
-            </Text>
-          </View>
         </View>
-        <View
-          style={{
-            width: "100%",
-            height: 2,
-            backgroundColor: "#fff",
-            opacity: 1 - this.state.draggedPercentage,
-          }}
-        ></View>
-      </View>
+      </>
     );
   }
 }
