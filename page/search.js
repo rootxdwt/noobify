@@ -15,12 +15,16 @@ class Item extends Component {
   onPress = async () => {
     const { id } = this.props.data;
     console.log("[Item]", this.props.type, id);
-    const available = await audioLibrary.checkAvailable(id);
+    const available = true;
 
     if (available) {
-      const queue = audioLibrary.getQueue();
-      console.log("[Item]", "Queue", queue);
-      audioLibrary.appendQueue(this.props.data);
+      const recommendations = await api.get(`/song/${id}/recommendations`);
+      const newQueue = [this.props.data, ...recommendations.data];
+      if (audioLibrary.getPlaying()) {
+        await audioLibrary.stopPlaying();
+      }
+      audioLibrary.setQueue(newQueue);
+      await audioLibrary.setIndex(0);
       if (!audioLibrary.getPlaying()) {
         await audioLibrary.setPlaying(true);
       }

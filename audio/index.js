@@ -18,8 +18,9 @@ const checkAvailable = async (id) => {
   if (caches[id]) {
     return caches[id];
   }
-  const result = await api.get(`/song/${id}/audio`);
-  const available = result.headers["content-type"].includes("audio/mpeg");
+  const {
+    data: { available },
+  } = await api.get(`/song/${id}/available`);
   caches[id] = available;
   return available;
 };
@@ -93,6 +94,7 @@ const setPlaying = async (playing) => {
 const stopPlaying = async () => {
   console.log("[Sound]", "Stopping");
   await sound.stopAsync();
+  playing = false;
 };
 
 const _loadAudio = async (id) => {
@@ -167,6 +169,13 @@ const getIndex = () => {
   return currentIndex;
 };
 
+const setIndex = async (value) => {
+  if (isPlaying) {
+    await stopPlaying();
+  }
+  currentIndex = value;
+};
+
 const setPosition = async (position) => {
   await sound.setPositionAsync(position);
 };
@@ -215,6 +224,7 @@ module.exports = {
   getLoopingMode,
   checkAvailable,
   appendQueue,
+  setIndex,
 };
 
 console.log("[Sound]", "Initialized sound");
