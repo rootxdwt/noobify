@@ -99,8 +99,11 @@ const stopPlaying = async () => {
 
 const _loadAudio = async (id) => {
   loaded = true;
-  if (!(await checkAvailable(id))) {
-    queues = queues.filter((q) => q !== id);
+  const isAvailable = await checkAvailable(id);
+  console.log("[Sound]", "Checking", id);
+  if (isAvailable !== true) {
+    console.log("[Sound]", "Song is not available");
+    queues = queues.filter((q) => q.id !== id);
     queueUpdateRecivers.forEach((reciever) => reciever(queues));
     if (queues.length <= currentIndex) {
       throw new Error("No queues to play");
