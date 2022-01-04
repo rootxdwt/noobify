@@ -147,6 +147,21 @@ export class Player extends Component {
   }
 
   render() {
+    const current = this.state.queue[this.state.index] || {
+      album: {
+        cover: [
+          {
+            url: "https://i.ytimg.com/vi/Z-Q-Z-Q-Z-Q/maxresdefault.jpg",
+          },
+        ],
+      },
+      artists: [
+        {
+          name: "Unknown",
+        },
+      ],
+      name: "No song playing",
+    };
     return (
       <>
         <View
@@ -202,7 +217,7 @@ export class Player extends Component {
                 marginRight: 10,
               }}
               source={{
-                uri: "https://cdn.xdcs.me/static/main/1000x1000-000000-80-0-0.jpg",
+                uri: current.album.cover[0].url,
               }}
             ></Image>
 
@@ -214,7 +229,7 @@ export class Player extends Component {
                   opacity: 1 - this.state.draggedPercentage,
                 }}
               >
-                러브래터
+                {current.name}
               </Text>
               <Text
                 style={{
@@ -222,7 +237,7 @@ export class Player extends Component {
                   opacity: 1 - this.state.draggedPercentage,
                 }}
               >
-                아이유
+                {current.artists.map((artist) => artist.name).join(", ")}
               </Text>
             </View>
             <View style={{ marginRight: 18 }}>
@@ -260,7 +275,7 @@ export class Player extends Component {
                 opacity: this.state.draggedPercentage,
               }}
             >
-              러브레터
+              {current.name}
             </Text>
             <Text
               style={{
@@ -269,7 +284,7 @@ export class Player extends Component {
                 opacity: this.state.draggedPercentage,
               }}
             >
-              아이유
+              {current.artists.map((artist) => artist.name).join(", ")}
             </Text>
             <View
               style={{

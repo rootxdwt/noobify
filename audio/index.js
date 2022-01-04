@@ -34,9 +34,8 @@ const _playbackStatusUpdate = async (status) => {
       currentIndex++;
       if (currentIndex >= queues.length) {
         currentIndex--;
-        await stopPlaying();
       } else {
-        await _loadAudio(queues[currentIndex]);
+        await _loadAudio(queues[currentIndex].id);
         await sound.playAsync();
       }
     } else if (loopingMode === "all") {
@@ -44,10 +43,10 @@ const _playbackStatusUpdate = async (status) => {
       if (currentIndex >= queues.length) {
         currentIndex = 0;
       }
-      await _loadAudio(queues[currentIndex]);
+      await _loadAudio(queues[currentIndex].id);
       await sound.playAsync();
     } else if (loopingMode === "one") {
-      await _loadAudio(queues[currentIndex]);
+      await _loadAudio(queues[currentIndex].id);
       await sound.playAsync();
     }
   }
@@ -69,6 +68,11 @@ const getPlaying = () => {
   return isPlaying;
 };
 
+const appendQueue = (queue) => {
+  queues.push(queue);
+  queueUpdateRecivers.forEach((reciever) => reciever(queues));
+};
+
 const setPlaying = async (playing) => {
   isPlaying = playing;
   if (playing) {
@@ -76,7 +80,7 @@ const setPlaying = async (playing) => {
       throw new Error("No queues to play");
     }
     if (loaded === false) {
-      await _loadAudio(queues[currentIndex]);
+      await _loadAudio(queues[currentIndex].id);
     }
     console.log("[Sound]", "Playing");
     await sound.playAsync();
@@ -99,7 +103,7 @@ const _loadAudio = async (id) => {
     if (queues.length <= currentIndex) {
       throw new Error("No queues to play");
     }
-    return _loadAudio(queues[currentIndex]);
+    return _loadAudio(queues[currentIndex].id);
   }
   await Audio.setAudioModeAsync({
     staysActiveInBackground: true,
@@ -122,6 +126,7 @@ const _unloadAudio = async () => {
 };
 
 const setQueue = (newQueue) => {
+  console.log("[Sound]", "Setting new queue");
   queues = newQueue;
   queueUpdateRecivers.forEach((reciever) => reciever(queues));
 };
@@ -139,7 +144,7 @@ const skip = async () => {
   if (loaded) {
     await _unloadAudio();
   }
-  await _loadAudio(queues[currentIndex]);
+  await _loadAudio(queues[currentIndex].id);
   await sound.playAsync();
 };
 
@@ -154,7 +159,7 @@ const back = async () => {
   if (loaded) {
     await _unloadAudio();
   }
-  await _loadAudio(queues[currentIndex]);
+  await _loadAudio(queues[currentIndex].id);
   await sound.playAsync();
 };
 
@@ -208,6 +213,8 @@ module.exports = {
   unregisterStatusUpdateReciver,
   setLoopingMode,
   getLoopingMode,
+  checkAvailable,
+  appendQueue,
 };
 
 console.log("[Sound]", "Initialized sound");

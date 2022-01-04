@@ -27,11 +27,7 @@ export default class App extends React.Component {
     if (sound === null) {
       console.log("[App]", "No sound found");
       audioLibrary.setSound(new Audio.Sound());
-      audioLibrary.setQueue([
-        "5nCwjUUsmBuNZKn9Xu10Os",
-        "2g0LdZQce9xlcHb1mBJyuz",
-        "4as4XEOR03oGm1STUKl6pa",
-      ]);
+      audioLibrary.setQueue([]);
     } else {
       console.log("[App]", "Sound already registered");
     }

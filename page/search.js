@@ -5,36 +5,61 @@ import {
   TextInput,
   ScrollView,
   Image,
+  Pressable,
 } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import api from "../api";
+import audioLibrary from "../audio";
 
 class Item extends Component {
+  onPress = async () => {
+    const { id } = this.props.data;
+    console.log("[Item]", this.props.type, id);
+    const available = await audioLibrary.checkAvailable(id);
+
+    if (available) {
+      const queue = audioLibrary.getQueue();
+      console.log("[Item]", "Queue", queue);
+      audioLibrary.appendQueue(this.props.data);
+      if (!audioLibrary.getPlaying()) {
+        await audioLibrary.setPlaying(true);
+      }
+    }
+  };
+
   render() {
     return (
-      <View style={styles.Content}>
-        <Image
-          style={{ width: 50, height: 50, borderRadius: 5 }}
-          source={{
-            uri: this.props.image,
-          }}
-        ></Image>
-        <View style={styles.Details}>
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 15,
-              color: "#fff",
+      <Pressable
+        onPress={this.onPress}
+        style={{
+          alignSelf: "flex-start",
+          width: "100%",
+        }}
+      >
+        <View style={styles.Content}>
+          <Image
+            style={{ width: 50, height: 50, borderRadius: 5 }}
+            source={{
+              uri: this.props.image,
             }}
-            numberOfLines={1}
-          >
-            {this.props.title}
-          </Text>
-          <Text style={{ color: "#fff" }} numberOfLines={1}>
-            {this.props.description}
-          </Text>
+          ></Image>
+          <View style={styles.Details}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 15,
+                color: "#fff",
+              }}
+              numberOfLines={1}
+            >
+              {this.props.title}
+            </Text>
+            <Text style={{ color: "#fff" }} numberOfLines={1}>
+              {this.props.description}
+            </Text>
+          </View>
         </View>
-      </View>
+      </Pressable>
     );
   }
 }
@@ -171,6 +196,8 @@ export class Search extends Component {
                         : "https://media.istockphoto.com/vectors/people-icon-person-icon-user-icon-in-trendy-flat-style-isolated-on-vector-id1166184350?k=20&m=1166184350&s=170667a&w=0&h=-OcfPNeTuiR5dJNM6ahYx3PgxevGi00akHF1J_Dq-rA="
                     }
                     description={`Artist`}
+                    type="artist"
+                    data={item}
                   />
                 );
               } else if (item.type == "album") {
@@ -182,6 +209,8 @@ export class Search extends Component {
                     description={`Album • ${item.artists
                       .map((artist) => artist.name)
                       .join(", ")}`}
+                    type="album"
+                    data={item}
                   />
                 );
               } else if (item.type == "playlist") {
@@ -191,6 +220,8 @@ export class Search extends Component {
                     title={item.name}
                     image={item.cover[0].url}
                     description={`Playlist`}
+                    type="playlist"
+                    data={item}
                   />
                 );
               } else if (item.type == "track") {
@@ -202,6 +233,8 @@ export class Search extends Component {
                     description={`Song • ${item.artists
                       .map((artist) => artist.name)
                       .join(", ")}`}
+                    type="song"
+                    data={item}
                   />
                 );
               }
@@ -229,6 +262,8 @@ export class Search extends Component {
                   description={`Song • ${item.artists
                     .map((artist) => artist.name)
                     .join(", ")}`}
+                  type="song"
+                  data={item}
                 />
               );
             })}
@@ -255,6 +290,8 @@ export class Search extends Component {
                   description={`Album • ${item.artists
                     .map((artist) => artist.name)
                     .join(", ")}`}
+                  type="album"
+                  data={item}
                 />
               );
             })}
@@ -283,6 +320,8 @@ export class Search extends Component {
                       : "https://media.istockphoto.com/vectors/people-icon-person-icon-user-icon-in-trendy-flat-style-isolated-on-vector-id1166184350?k=20&m=1166184350&s=170667a&w=0&h=-OcfPNeTuiR5dJNM6ahYx3PgxevGi00akHF1J_Dq-rA="
                   }
                   description={`Artist`}
+                  type="artist"
+                  data={item}
                 />
               );
             })}
@@ -307,6 +346,8 @@ export class Search extends Component {
                   title={item.name}
                   image={item.cover[0].url}
                   description={`Playlist`}
+                  type="playlist"
+                  data={item}
                 />
               );
             })}
