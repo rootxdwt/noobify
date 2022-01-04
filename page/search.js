@@ -20,14 +20,9 @@ class Item extends Component {
     if (available) {
       const recommendations = await api.get(`/song/${id}/recommendations`);
       const newQueue = [this.props.data, ...recommendations.data];
-      if (audioLibrary.getPlaying()) {
-        await audioLibrary.stopPlaying();
-      }
-      audioLibrary.setQueue(newQueue);
+      await audioLibrary.setQueue(newQueue);
       await audioLibrary.setIndex(0);
-      if (!audioLibrary.getPlaying()) {
-        await audioLibrary.setPlaying(true);
-      }
+      await audioLibrary.setPlaying(true);
     }
   };
 

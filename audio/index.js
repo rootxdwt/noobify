@@ -130,8 +130,11 @@ const _unloadAudio = async () => {
   await sound.unloadAsync();
 };
 
-const setQueue = (newQueue) => {
+const setQueue = async (newQueue) => {
   console.log("[Sound]", "Setting new queue");
+  if (loaded) {
+    await _unloadAudio();
+  }
   queues = newQueue;
   queueUpdateRecivers.forEach((reciever) => reciever(queues));
 };
@@ -173,8 +176,8 @@ const getIndex = () => {
 };
 
 const setIndex = async (value) => {
-  if (isPlaying) {
-    await stopPlaying();
+  if (loaded) {
+    await _unloadAudio();
   }
   currentIndex = value;
 };
