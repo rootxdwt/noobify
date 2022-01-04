@@ -32,6 +32,7 @@ export class Player extends Component {
       draggedPercentage: 0,
       queue: [],
       index: 0,
+      skipping: false,
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
@@ -57,14 +58,34 @@ export class Player extends Component {
   previous() {
     console.log("[Player]", "Previous track");
     if (this.state.index > 0) {
-      audioLibrary.back();
+      if (!this.state.skipping) {
+        this.state.skipping = true;
+        audioLibrary
+          .back()
+          .then(() => {
+            this.state.skipping = false;
+          })
+          .catch(() => {
+            this.state.skipping = false;
+          });
+      }
     }
   }
 
   next() {
     console.log("[Player]", "Next track");
     if (this.state.queue.length > this.state.index + 1) {
-      audioLibrary.skip();
+      if (!this.state.skipping) {
+        this.state.skipping = true;
+        audioLibrary
+          .skip()
+          .then(() => {
+            this.state.skipping = false;
+          })
+          .catch(() => {
+            this.state.skipping = false;
+          });
+      }
     }
   }
 
@@ -268,7 +289,7 @@ export class Player extends Component {
             >
               <Text
                 style={
-                  0 < this.state.index
+                  0 < this.state.index && !this.state.skipping
                     ? { color: "#fff" }
                     : { color: "#505050" }
                 }
@@ -284,7 +305,8 @@ export class Player extends Component {
               </Text>
               <Text
                 style={
-                  this.state.queue.length > this.state.index + 1
+                  this.state.queue.length > this.state.index + 1 &&
+                  !this.state.skipping
                     ? { color: "#fff" }
                     : { color: "#505050" }
                 }

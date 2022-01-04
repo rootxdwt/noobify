@@ -197,6 +197,7 @@ module.exports = {
   setPlaying,
   stopPlaying,
   setQueue,
+  getQueue,
   skip,
   back,
   getIndex,
