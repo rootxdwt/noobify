@@ -18,8 +18,9 @@ const checkAvailable = async (id) => {
   if (caches[id]) {
     return caches[id];
   }
-  const result = await api.get(`/song/${id}/audio`);
-  const available = result.headers["content-type"].includes("audio/mpeg");
+  const {
+    data: { available },
+  } = await api.get(`/song/${id}/available`);
   caches[id] = available;
   return available;
 };
@@ -93,12 +94,16 @@ const setPlaying = async (playing) => {
 const stopPlaying = async () => {
   console.log("[Sound]", "Stopping");
   await sound.stopAsync();
+  playing = false;
 };
 
 const _loadAudio = async (id) => {
   loaded = true;
-  if (!(await checkAvailable(id))) {
-    queues = queues.filter((q) => q !== id);
+  const isAvailable = await checkAvailable(id);
+  console.log("[Sound]", "Checking", id);
+  if (isAvailable !== true) {
+    console.log("[Sound]", "Song is not available");
+    queues = queues.filter((q) => q.id !== id);
     queueUpdateRecivers.forEach((reciever) => reciever(queues));
     if (queues.length <= currentIndex) {
       throw new Error("No queues to play");
@@ -135,8 +140,11 @@ const _unloadAudio = async () => {
   await sound.unloadAsync();
 };
 
-const setQueue = (newQueue) => {
+const setQueue = async (newQueue) => {
   console.log("[Sound]", "Setting new queue");
+  if (loaded) {
+    await _unloadAudio();
+  }
   queues = newQueue;
   queueUpdateRecivers.forEach((reciever) => reciever(queues));
 };
@@ -175,6 +183,13 @@ const back = async () => {
 
 const getIndex = () => {
   return currentIndex;
+};
+
+const setIndex = async (value) => {
+  if (loaded) {
+    await _unloadAudio();
+  }
+  currentIndex = value;
 };
 
 const setPosition = async (position) => {
@@ -225,6 +240,7 @@ module.exports = {
   getLoopingMode,
   checkAvailable,
   appendQueue,
+  setIndex,
 };
 
 console.log("[Sound]", "Initialized sound");
