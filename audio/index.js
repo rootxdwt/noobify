@@ -105,9 +105,19 @@ const _loadAudio = async (id) => {
     }
     return _loadAudio(queues[currentIndex].id);
   }
+
+
+  //UNCOMMENT BELOW ON PRODUCTION
+
+  /*
   await Audio.setAudioModeAsync({
     staysActiveInBackground: true,
   });
+  */
+ 
+  //UNCOMMENT ABOVE ON PRODUCTION
+
+
   console.log("[Sound]", "Loading", id);
   await sound.loadAsync(
     {

@@ -19,6 +19,32 @@ var largeplaypause = [
   <Icon name="pause" size={30} />,
 ];
 
+const ProgressBar =(props) => {
+  return(
+    <>
+    <View style={{
+      position: 'absolute',
+      width: "80%",
+      height: 2,
+      backgroundColor: "#fff",
+      opacity: props.opacity,
+      margin: 30,
+    }}>
+    </View>
+    <View style={{
+      position: 'absolute',
+      width: 80*props.currentProgress+"%",
+      height: 2,
+      backgroundColor: "#000",
+      opacity: props.opacity,
+    }}>
+  
+    </View>
+    </>
+  )
+}
+
+
 export class Player extends Component {
   constructor(props) {
     super(props);
@@ -52,6 +78,7 @@ export class Player extends Component {
       play: status.isPlaying === true ? 1 : 0,
       queue: audioLibrary.getQueue(),
       index: audioLibrary.getIndex(),
+      playingProgress: status.positionMillis/status.DurationMills
     });
   };
 
@@ -286,20 +313,14 @@ export class Player extends Component {
             >
               {current.artists.map((artist) => artist.name).join(", ")}
             </Text>
-            <View
-              style={{
-                width: "80%",
-                height: 2,
-                backgroundColor: "#fff",
-                opacity: this.state.draggedPercentage,
-                margin: 30,
-              }}
-            ></View>
+            <ProgressBar current={50} opacity={this.state.draggedPercentage} currentProgress={this.state.playingProgress}></ProgressBar>
+
             <View
               style={{
                 flex: 1,
                 flexDirection: "row",
                 justifyContent: "center",
+                margin: 30
               }}
             >
               <Text
@@ -334,14 +355,17 @@ export class Player extends Component {
               </Text>
             </View>
           </View>
+          
+
           <View
             style={{
-              width: "100%",
+              width: this.state.playingProgress*100+"%",
               height: 2,
               backgroundColor: "#fff",
               opacity: 1 - this.state.draggedPercentage,
             }}
           ></View>
+
         </View>
       </>
     );
