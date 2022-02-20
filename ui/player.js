@@ -4,11 +4,11 @@ import {
   View,
   Image,
   Dimensions,
-  Animated,
 } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import audioLibrary from "../audio";
+import api from "../api";
 
 var playpause = [
   <Icon name="play" size={18} />,
@@ -59,6 +59,7 @@ export class Player extends Component {
       queue: [],
       index: 0,
       skipping: false,
+      playingId: '',
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
@@ -73,12 +74,14 @@ export class Player extends Component {
     audioLibrary.unregisterStatusUpdateReciver(this.statusHandler);
   }
 
-  statusHandler = (status) => {
+  statusHandler = async(status) => {
+//    this.setState({playingId: })
+    //var {data: {duration}} = await api.get(`song/${this.state.playingId}`)
     this.setState({
       play: status.isPlaying === true ? 1 : 0,
       queue: audioLibrary.getQueue(),
       index: audioLibrary.getIndex(),
-      playingProgress: status.positionMillis/status.DurationMills
+      //playingProgress: status.positionMillis/duration
     });
   };
 
@@ -313,7 +316,7 @@ export class Player extends Component {
             >
               {current.artists.map((artist) => artist.name).join(", ")}
             </Text>
-            <ProgressBar current={50} opacity={this.state.draggedPercentage} currentProgress={this.state.playingProgress}></ProgressBar>
+            <ProgressBar opacity={this.state.draggedPercentage} currentProgress={this.state.playingProgress}></ProgressBar>
 
             <View
               style={{
