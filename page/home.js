@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  Pressable,
+} from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import api from "../api";
@@ -62,42 +69,46 @@ export class Home extends Component {
                   {shelf.content.map((item) => {
                     return (
                       <View style={styles.MusicBox} key={item.id}>
-                        <Image
-                          style={{ width: 130, height: 130, borderRadius: 5 }}
-                          source={{
-                            uri: item.cover[0].url,
-                          }}
-                        ></Image>
-                        <View
-                          style={{
-                            flex: 1,
-                            alignItems: "flex-start",
-                            flexDirection: "column",
-                            width: 125,
-                          }}
+                        <Pressable
+                          onPress={() => this.props.showPlaylist(item.id)}
                         >
-                          <Text
-                            numberOfLines={1}
+                          <Image
+                            style={{ width: 130, height: 130, borderRadius: 5 }}
+                            source={{
+                              uri: item.cover[0].url,
+                            }}
+                          ></Image>
+                          <View
                             style={{
-                              fontWeight: "bold",
-                              color: "#fff",
-                              marginTop: 10,
-                              textAlign: "left",
+                              flex: 1,
+                              alignItems: "flex-start",
+                              flexDirection: "column",
+                              width: 125,
                             }}
                           >
-                            {item.name}
-                          </Text>
-                          <Text
-                            numberOfLines={1}
-                            style={{
-                              fontWeight: "normal",
-                              color: "#949494",
-                              textAlign: "left",
-                            }}
-                          >
-                            {item.description}
-                          </Text>
-                        </View>
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                fontWeight: "bold",
+                                color: "#fff",
+                                marginTop: 10,
+                                textAlign: "left",
+                              }}
+                            >
+                              {item.name}
+                            </Text>
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                fontWeight: "normal",
+                                color: "#949494",
+                                textAlign: "left",
+                              }}
+                            >
+                              {item.description}
+                            </Text>
+                          </View>
+                        </Pressable>
                       </View>
                     );
                   })}
