@@ -370,6 +370,16 @@ export class Search extends Component {
   }
 }
 
+// export class Search extends Component {
+//   render() {
+//     return (
+//       <View style={{ flex: 1 }}>
+//         <Text>hi</Text>
+//       </View>
+//     );
+//   }
+// }
+
 const styles = StyleSheet.create({
   Main: {
     marginLeft: 0,
