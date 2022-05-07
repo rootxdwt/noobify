@@ -29,12 +29,23 @@ const ProgressBar = (props) => {
       <View
         style={{
           position: "absolute",
-          width: 80 * props.currentProgress + "%",
-          height: 2,
-          backgroundColor: "#000",
-          opacity: props.opacity,
+          width: "80%",
+          flex: 1,
+          height:2,
+          alignItems: "left",
+          justifyContent: "center"
         }}
-      ></View>
+      >
+        <View
+          style={{
+            position: "absolute",
+            width: props.currentProgress * 0.8 + "%",
+            height: 2,
+            backgroundColor: "#000",
+            opacity: props.opacity,
+          }}
+        ></View>
+      </View>
     </>
   );
 };
@@ -55,6 +66,7 @@ export class Player extends Component {
       skipping: false,
       playingId: "",
       backgroundColor: "#364954",
+      playingProgress: 0,
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
@@ -70,7 +82,12 @@ export class Player extends Component {
   };
 
   statusHandler = async (status) => {
-    console.log((status.positionMillis / audioLibrary.audioFullDuration()) * 100);
+    var playingStat =
+      (status.positionMillis / audioLibrary.audioFullDuration()) * 100;
+    console.log(playingStat);
+    this.setState({
+      playingProgress: playingStat,
+    });
     if (status.positionMillis === 0) {
       this.applyBackgroundColor();
     }
@@ -373,7 +390,7 @@ export class Player extends Component {
 
           <View
             style={{
-              width: this.state.playingProgress * 100 + "%",
+              width: this.state.playingProgress + "%",
               height: 2,
               backgroundColor: "#fff",
               opacity: 1 - this.state.draggedPercentage,
