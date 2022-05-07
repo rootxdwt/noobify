@@ -285,7 +285,10 @@ export class Player extends Component {
 
             <View style={styles.SongInfo}>
               <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
                 style={{
+                  width: "93%",
                   color: "#fff",
                   fontWeight: "bold",
                   opacity: 1 - this.state.draggedPercentage,
@@ -330,7 +333,10 @@ export class Player extends Component {
             }}
           >
             <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
               style={{
+                width: "90%",
                 color: "#fff",
                 fontSize: 25,
                 fontWeight: "bold",
