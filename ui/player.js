@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import audioLibrary from "../audio";
+import api from "../api";
 
 var playpause = [
   <Icon name="play" size={18} />,
@@ -53,6 +54,7 @@ export class Player extends Component {
       index: 0,
       skipping: false,
       playingId: "",
+      backgroundColor: "#364954",
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
@@ -69,11 +71,29 @@ export class Player extends Component {
 
   statusHandler = async (status) => {
     console.log((status.positionMillis / status.durationMillis) * 100);
+    if (status.positionMillis === 0) {
+      if (this.state.queue.length > 0) {
+        this.applyBackgroundColor();
+      }
+    }
     this.setState({
       play: status.isPlaying === true ? 1 : 0,
       queue: audioLibrary.getQueue(),
       index: audioLibrary.getIndex(),
     });
+  };
+
+  applyBackgroundColor = async () => {
+    const current = this.state.queue[this.state.index];
+    if (current) {
+      const images = current.album.cover[0].url.split("/")[4];
+      const {
+        data: { color_raw },
+      } = await api.get(`/image/${images[1]}/color`);
+      this.setState({ backgroundColor: color_raw["hex"] });
+    } else {
+      this.setState({ backgroundColor: "#364954" });
+    }
   };
 
   previous() {
@@ -200,7 +220,7 @@ export class Player extends Component {
             width: this.state.width * 100 + "%",
             height: this.state.height,
             borderRadius: this.state.borderRadius,
-            backgroundColor: `#364954`,
+            backgroundColor: this.state.backgroundColor,
             position: "absolute",
             bottom: this.state.bottom,
             overflow: "hidden",
