@@ -8,7 +8,6 @@ import {
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import audioLibrary from "../audio";
-import api from "../api";
 
 var playpause = [
   <Icon name="play" size={18} />,
@@ -66,22 +65,19 @@ export class Player extends Component {
     this.interfaceX = Dimensions.get("window").width;
   }
 
-  componentDidMount() {
+  componentDidMount=()=> {
     audioLibrary.registerStatusUpdateReciver(this.statusHandler);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount=()=> {
     audioLibrary.unregisterStatusUpdateReciver(this.statusHandler);
   }
 
   statusHandler = async(status) => {
-//    this.setState({playingId: })
-    //var {data: {duration}} = await api.get(`song/${this.state.playingId}`)
     this.setState({
       play: status.isPlaying === true ? 1 : 0,
       queue: audioLibrary.getQueue(),
       index: audioLibrary.getIndex(),
-      //playingProgress: status.positionMillis/duration
     });
   };
 

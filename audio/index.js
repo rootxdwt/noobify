@@ -18,11 +18,10 @@ const checkAvailable = async (id) => {
   if (caches[id]) {
     return caches[id];
   }
-  const {
-    data: { available },
-  } = await api.get(`/song/${id}/available`);
-  caches[id] = available;
-  return available;
+  var resp = await api.get(`/song/${id}/available`)
+  var tf = resp.data.available
+  console.log(tf)
+  return tf;
 };
 
 const _playbackStatusUpdate = async (status) => {
@@ -101,7 +100,7 @@ const _loadAudio = async (id) => {
   loaded = true;
   const isAvailable = await checkAvailable(id);
   console.log("[Sound]", "Checking", id);
-  if (isAvailable !== true) {
+  if (isAvailable == false) {
     console.log("[Sound]", "Song is not available");
     queues = queues.filter((q) => q.id !== id);
     queueUpdateRecivers.forEach((reciever) => reciever(queues));
@@ -111,6 +110,8 @@ const _loadAudio = async (id) => {
     return _loadAudio(queues[currentIndex].id);
   }
 
+  //for ios
+  await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
 
   //UNCOMMENT BELOW ON PRODUCTION
 
