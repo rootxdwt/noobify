@@ -31,9 +31,9 @@ const ProgressBar = (props) => {
           position: "absolute",
           width: "80%",
           flex: 1,
-          height:2,
+          height: 2,
           alignItems: "left",
-          justifyContent: "center"
+          justifyContent: "center",
         }}
       >
         <View
@@ -82,8 +82,10 @@ export class Player extends Component {
   };
 
   statusHandler = async (status) => {
-    var playingStat =
-      (status.positionMillis / audioLibrary.audioFullDuration()) * 100;
+    const playingStat =
+      status.isPlaying === true
+        ? (status.positionMillis / audioLibrary.audioFullDuration()) * 100
+        : 0;
     console.log(playingStat);
     this.setState({
       playingProgress: playingStat,
