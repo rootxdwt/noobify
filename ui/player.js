@@ -39,7 +39,7 @@ const ProgressBar = (props) => {
         <View
           style={{
             position: "absolute",
-            width: props.currentProgress * 0.8 + "%",
+            width: props.currentProgress+ "%",
             height: 2,
             backgroundColor: "#000",
             opacity: props.opacity,
