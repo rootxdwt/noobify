@@ -72,9 +72,7 @@ export class Player extends Component {
   statusHandler = async (status) => {
     console.log((status.positionMillis / status.durationMillis) * 100);
     if (status.positionMillis === 0) {
-      if (this.state.queue.length > 0) {
-        this.applyBackgroundColor();
-      }
+      this.applyBackgroundColor();
     }
     this.setState({
       play: status.isPlaying === true ? 1 : 0,
@@ -88,9 +86,9 @@ export class Player extends Component {
     if (current) {
       const images = current.album.cover[0].url.split("/")[4];
       const {
-        data: { color_raw },
-      } = await api.get(`/image/${images[1]}/color`);
-      this.setState({ backgroundColor: color_raw["hex"] });
+        data: { color_light },
+      } = await api.get(`/image/${images}/color`);
+      this.setState({ backgroundColor: color_light["hex"] });
     } else {
       this.setState({ backgroundColor: "#364954" });
     }
