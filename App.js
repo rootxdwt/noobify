@@ -3,6 +3,7 @@ import { Player } from "./ui/player.js";
 import { BottomMenu } from "./ui/bottomMenu.js";
 import { Home } from "./page/home.js";
 import { Search } from "./page/search.js";
+import { Playlist } from "./page/playlist.js";
 import { My } from "./page/my.js";
 import {
   StyleSheet,
@@ -20,6 +21,7 @@ const pages = [<Home></Home>, <Search></Search>, <My></My>];
 export default class App extends React.Component {
   state = {
     currentPage: 0,
+    playlist: null,
   };
 
   componentDidMount() {
@@ -38,14 +40,24 @@ export default class App extends React.Component {
   };
 
   setPage = (page) => {
-    this.setState({ currentPage: page });
+    this.setState({ currentPage: page, playlist: null });
+  };
+
+  showPlaylist = (id) => {
+    this.setState({ playlist: id });
   };
 
   render() {
     return (
       <SafeAreaView style={styles.ParentContainer}>
         <StatusBar barStyle="light-content" backgroundColor="#262626" />
-        {pages[this.state.currentPage]}
+        {this.state.playlist ? (
+          <Playlist id={this.state.playlist}></Playlist>
+        ) : (
+          React.cloneElement(pages[this.state.currentPage], {
+            showPlaylist: this.showPlaylist,
+          })
+        )}
 
         <View style={styles.Container}>
           <Player></Player>

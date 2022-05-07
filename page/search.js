@@ -15,14 +15,18 @@ class Item extends Component {
   onPress = async () => {
     const { id } = this.props.data;
     console.log("[Item]", this.props.type, id);
-    const available = true;
+    if (this.props.type === "playlist") {
+      this.props.showPlaylist(id);
+    } else {
+      const available = true;
 
-    if (available) {
-      const recommendations = await api.get(`/song/${id}/recommendations`);
-      const newQueue = [this.props.data, ...recommendations.data];
-      await audioLibrary.setQueue(newQueue);
-      await audioLibrary.setIndex(0);
-      await audioLibrary.setPlaying(true);
+      if (available) {
+        const recommendations = await api.get(`/song/${id}/recommendations`);
+        const newQueue = [this.props.data, ...recommendations.data];
+        await audioLibrary.setQueue(newQueue);
+        await audioLibrary.setIndex(0);
+        await audioLibrary.setPlaying(true);
+      }
     }
   };
 
@@ -187,6 +191,7 @@ export class Search extends Component {
               if (item.type == "artist") {
                 return (
                   <Item
+                    showPlaylist={this.props.showPlaylist}
                     key={item.id}
                     title={item.name}
                     image={
@@ -202,6 +207,7 @@ export class Search extends Component {
               } else if (item.type == "album") {
                 return (
                   <Item
+                    showPlaylist={this.props.showPlaylist}
                     key={item.id}
                     title={item.name}
                     image={item.cover[0].url}
@@ -215,6 +221,7 @@ export class Search extends Component {
               } else if (item.type == "playlist") {
                 return (
                   <Item
+                    showPlaylist={this.props.showPlaylist}
                     key={item.id}
                     title={item.name}
                     image={item.cover[0].url}
@@ -226,6 +233,7 @@ export class Search extends Component {
               } else if (item.type == "track") {
                 return (
                   <Item
+                    showPlaylist={this.props.showPlaylist}
                     key={item.id}
                     title={item.name}
                     image={item.album.cover[0].url}
@@ -255,6 +263,7 @@ export class Search extends Component {
             {this.state.songs.map((item) => {
               return (
                 <Item
+                  showPlaylist={this.props.showPlaylist}
                   key={item.id}
                   title={item.name}
                   image={item.album.cover[0].url}
@@ -283,6 +292,7 @@ export class Search extends Component {
             {this.state.albums.map((item) => {
               return (
                 <Item
+                  showPlaylist={this.props.showPlaylist}
                   key={item.id}
                   title={item.name}
                   image={item.cover[0].url}
@@ -311,6 +321,7 @@ export class Search extends Component {
             {this.state.artists.map((item) => {
               return (
                 <Item
+                  showPlaylist={this.props.showPlaylist}
                   key={item.id}
                   title={item.name}
                   image={
@@ -341,6 +352,7 @@ export class Search extends Component {
             {this.state.playlists.map((item) => {
               return (
                 <Item
+                  showPlaylist={this.props.showPlaylist}
                   key={item.id}
                   title={item.name}
                   image={item.cover[0].url}
