@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Dimensions,
-} from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import audioLibrary from "../audio";
@@ -18,31 +12,31 @@ var largeplaypause = [
   <Icon name="pause" size={30} />,
 ];
 
-const ProgressBar =(props) => {
-  return(
+const ProgressBar = (props) => {
+  return (
     <>
-    <View style={{
-      position: 'absolute',
-      width: "80%",
-      height: 2,
-      backgroundColor: "#fff",
-      opacity: props.opacity,
-      margin: 30,
-    }}>
-    </View>
-    <View style={{
-      position: 'absolute',
-      width: 80*props.currentProgress+"%",
-      height: 2,
-      backgroundColor: "#000",
-      opacity: props.opacity,
-    }}>
-  
-    </View>
+      <View
+        style={{
+          position: "absolute",
+          width: "80%",
+          height: 2,
+          backgroundColor: "#fff",
+          opacity: props.opacity,
+          margin: 30,
+        }}
+      ></View>
+      <View
+        style={{
+          position: "absolute",
+          width: 80 * props.currentProgress + "%",
+          height: 2,
+          backgroundColor: "#000",
+          opacity: props.opacity,
+        }}
+      ></View>
     </>
-  )
-}
-
+  );
+};
 
 export class Player extends Component {
   constructor(props) {
@@ -58,22 +52,23 @@ export class Player extends Component {
       queue: [],
       index: 0,
       skipping: false,
-      playingId: '',
+      playingId: "",
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
     this.interfaceX = Dimensions.get("window").width;
   }
 
-  componentDidMount=()=> {
+  componentDidMount = () => {
     audioLibrary.registerStatusUpdateReciver(this.statusHandler);
-  }
+  };
 
-  componentWillUnmount=()=> {
+  componentWillUnmount = () => {
     audioLibrary.unregisterStatusUpdateReciver(this.statusHandler);
-  }
+  };
 
-  statusHandler = async(status) => {
+  statusHandler = async (status) => {
+    console.log((status.positionMillis / status.durationMillis) * 100);
     this.setState({
       play: status.isPlaying === true ? 1 : 0,
       queue: audioLibrary.getQueue(),
@@ -312,14 +307,17 @@ export class Player extends Component {
             >
               {current.artists.map((artist) => artist.name).join(", ")}
             </Text>
-            <ProgressBar opacity={this.state.draggedPercentage} currentProgress={this.state.playingProgress}></ProgressBar>
+            <ProgressBar
+              opacity={this.state.draggedPercentage}
+              currentProgress={this.state.playingProgress}
+            ></ProgressBar>
 
             <View
               style={{
                 flex: 1,
                 flexDirection: "row",
                 justifyContent: "center",
-                margin: 30
+                margin: 30,
               }}
             >
               <Text
@@ -354,17 +352,15 @@ export class Player extends Component {
               </Text>
             </View>
           </View>
-          
 
           <View
             style={{
-              width: this.state.playingProgress*100+"%",
+              width: this.state.playingProgress * 100 + "%",
               height: 2,
               backgroundColor: "#fff",
               opacity: 1 - this.state.draggedPercentage,
             }}
           ></View>
-
         </View>
       </>
     );
