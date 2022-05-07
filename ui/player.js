@@ -336,7 +336,7 @@ export class Player extends Component {
               numberOfLines={1}
               ellipsizeMode="tail"
               style={{
-                width: "90%",
+                maxWidth: "90%",
                 color: "#fff",
                 fontSize: 25,
                 fontWeight: "bold",
