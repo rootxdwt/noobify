@@ -32,14 +32,14 @@ const ProgressBar = (props) => {
           width: "80%",
           flex: 1,
           height: 2,
-          alignItems: "left",
+          // alignItems: "left",
           justifyContent: "center",
         }}
       >
         <View
           style={{
             position: "absolute",
-            width: props.currentProgress+ "%",
+            width: props.currentProgress + "%",
             height: 2,
             backgroundColor: "#000",
             opacity: props.opacity,

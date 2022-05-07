@@ -98,6 +98,7 @@ const stopPlaying = async () => {
 const audioFullDuration = () => {
   return playingAudioFullDuration;
 };
+
 const _loadAudio = async (id) => {
   loaded = true;
   const isAvailable = await checkAvailable(id);
