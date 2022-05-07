@@ -18,8 +18,8 @@ const checkAvailable = async (id) => {
   if (caches[id]) {
     return caches[id];
   }
-  var resp = await api.get(`/song/${id}/available`)
-  var tf = resp.data.available
+  var resp = await api.get(`/song/${id}/available`);
+  var tf = resp.data.available;
   return tf;
 };
 
@@ -89,17 +89,15 @@ const setPlaying = async (playing) => {
   }
 };
 
-
-
 const stopPlaying = async () => {
   console.log("[Sound]", "Stopping");
   await sound.stopAsync();
   playing = false;
 };
 
-const audioFullDuration = ()=>{
-  return playingAudioFullDuration
-}
+const audioFullDuration = () => {
+  return playingAudioFullDuration;
+};
 const _loadAudio = async (id) => {
   loaded = true;
   const isAvailable = await checkAvailable(id);
@@ -124,12 +122,11 @@ const _loadAudio = async (id) => {
     staysActiveInBackground: true,
   });
   */
- 
+
   //UNCOMMENT ABOVE ON PRODUCTION
 
-
   var resp = await api.get(`/song/${id}/`);
-  playingAudioFullDuration = resp.data.duration
+  playingAudioFullDuration = resp.data.duration;
   console.log("[Sound]", "Loading", id);
   await sound.loadAsync(
     {
@@ -248,7 +245,7 @@ module.exports = {
   checkAvailable,
   appendQueue,
   setIndex,
-  audioFullDuration
+  audioFullDuration,
 };
 
 console.log("[Sound]", "Initialized sound");
