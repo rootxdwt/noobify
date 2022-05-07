@@ -7,7 +7,7 @@ let caches = {};
 let isPlaying = false;
 let loopingMode = "none";
 let currentIndex = 0;
-
+let playingAudioFullDuration = 0;
 let loaded = false;
 
 // Handlers
@@ -20,7 +20,6 @@ const checkAvailable = async (id) => {
   }
   var resp = await api.get(`/song/${id}/available`)
   var tf = resp.data.available
-  console.log(tf)
   return tf;
 };
 
@@ -90,12 +89,17 @@ const setPlaying = async (playing) => {
   }
 };
 
+
+
 const stopPlaying = async () => {
   console.log("[Sound]", "Stopping");
   await sound.stopAsync();
   playing = false;
 };
 
+const audioFullDuration = ()=>{
+  return playingAudioFullDuration
+}
 const _loadAudio = async (id) => {
   loaded = true;
   const isAvailable = await checkAvailable(id);
@@ -124,6 +128,8 @@ const _loadAudio = async (id) => {
   //UNCOMMENT ABOVE ON PRODUCTION
 
 
+  var resp = await api.get(`/song/${id}/`);
+  playingAudioFullDuration = resp.data.duration
   console.log("[Sound]", "Loading", id);
   await sound.loadAsync(
     {
@@ -242,6 +248,7 @@ module.exports = {
   checkAvailable,
   appendQueue,
   setIndex,
+  audioFullDuration
 };
 
 console.log("[Sound]", "Initialized sound");

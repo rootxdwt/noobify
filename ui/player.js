@@ -70,7 +70,7 @@ export class Player extends Component {
   };
 
   statusHandler = async (status) => {
-    console.log((status.positionMillis / status.durationMillis) * 100);
+    console.log((status.positionMillis / audioLibrary.audioFullDuration()) * 100);
     if (status.positionMillis === 0) {
       this.applyBackgroundColor();
     }
