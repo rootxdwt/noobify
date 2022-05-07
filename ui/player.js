@@ -71,6 +71,7 @@ export class Player extends Component {
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
     this.interfaceX = Dimensions.get("window").width;
+    this.prevProgress=0
   }
 
   componentDidMount = () => {
@@ -82,10 +83,13 @@ export class Player extends Component {
   };
 
   statusHandler = async (status) => {
-    const playingStat =
-      status.isPlaying === true
-        ? (status.positionMillis / audioLibrary.audioFullDuration()) * 100
-        : 0;
+    let playingStat;
+    if(status.isPlaying === true){
+      playingStat =(status.positionMillis / audioLibrary.audioFullDuration()) * 100
+      this.prevProgress = playingStat
+    }else{
+      playingStat=this.prevProgress
+    }
     console.log(playingStat);
     this.setState({
       playingProgress: playingStat,
