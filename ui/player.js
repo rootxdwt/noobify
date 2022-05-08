@@ -162,7 +162,7 @@ export class Player extends Component {
     if(this.playingStat/100+draggedProg<=1){
       this.setState({playingProgress: this.playingStat+draggedProg*100})
       //console.log((this.playingStat/100+draggedProg)*audioLibrary.audioFullDuration())
-      //await audioLibrary.changeProgress((this.playingStat/100+draggedProg)*audioLibrary.audioFullDuration())
+      await audioLibrary.changeProgress((this.playingStat/100+draggedProg)*audioLibrary.audioFullDuration())
     }else{
       this.setState({playingProgress: 100})
     }
