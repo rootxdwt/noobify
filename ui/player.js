@@ -32,7 +32,6 @@ const ProgressBar = (props) => {
           width: "80%",
           flex: 1,
           height: 2,
-          // alignItems: "left",
           justifyContent: "center",
         }}
       >
@@ -40,7 +39,7 @@ const ProgressBar = (props) => {
           style={{
             position: "absolute",
             width: props.currentProgress + "%",
-            height: 2,
+            height: props.isProgressBarDragging ? 10 : 2,
             backgroundColor: "#000",
             opacity: props.opacity,
           }}
@@ -67,11 +66,14 @@ export class Player extends Component {
       playingId: "",
       backgroundColor: "#364954",
       playingProgress: 0,
+      isProgressBarDragging: false,
+      progressBarStartPos:0
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
     this.interfaceX = Dimensions.get("window").width;
-    this.prevProgress=0
+    this.prevProgress = 0;
+    this.playingStat=0;
   }
 
   componentDidMount = () => {
@@ -83,16 +85,15 @@ export class Player extends Component {
   };
 
   statusHandler = async (status) => {
-    let playingStat;
-    if(status.isPlaying === true){
-      playingStat =(status.positionMillis / audioLibrary.audioFullDuration()) * 100
-      this.prevProgress = playingStat
-    }else{
-      playingStat=this.prevProgress
+    if (status.isPlaying === true) {
+      this.playingStat =
+        (status.positionMillis / audioLibrary.audioFullDuration()) * 100;
+      this.prevProgress = this.playingStat;
+    } else {
+      this.playingStat = this.prevProgress;
     }
-    console.log(playingStat);
     this.setState({
-      playingProgress: playingStat,
+      playingProgress: this.playingStat,
     });
     if (status.positionMillis === 0) {
       this.applyBackgroundColor();
@@ -151,6 +152,26 @@ export class Player extends Component {
     }
   }
 
+  ChangeProgressBarState = (e) => {
+      audioLibrary.setPlaying(false);
+      this.setState({progressBarStartPos: e.nativeEvent.pageX})
+      this.setState({ isProgressBarDragging: true });
+  };
+  MoveProgressBar = async(e) => {
+    var draggedProg = (e.nativeEvent.pageX-this.state.progressBarStartPos)/(this.interfaceX*0.8)
+    if(this.playingStat/100+draggedProg<=1){
+      this.setState({playingProgress: this.playingStat+draggedProg*100})
+      //console.log((this.playingStat/100+draggedProg)*audioLibrary.audioFullDuration())
+      //await audioLibrary.changeProgress((this.playingStat/100+draggedProg)*audioLibrary.audioFullDuration())
+    }else{
+      this.setState({playingProgress: 100})
+    }
+  }
+  ReleaseProgressBar = (e)=> {
+    audioLibrary.setPlaying(true)
+    this.setState({ isProgressBarDragging: false });
+  }
+
   togglePlay() {
     var n;
     switch (this.state.play) {
@@ -162,6 +183,7 @@ export class Player extends Component {
         break;
     }
     audioLibrary.setPlaying(n);
+
   }
 
   startMove(e) {
@@ -285,8 +307,8 @@ export class Player extends Component {
 
             <View style={styles.SongInfo}>
               <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
+                numberOfLines={1}
+                ellipsizeMode="tail"
                 style={{
                   width: "93%",
                   color: "#fff",
@@ -320,6 +342,11 @@ export class Player extends Component {
           </View>
 
           <View
+            onMoveShouldSetResponder={()=>true}
+            onResponderGrant={(e) => this.ChangeProgressBarState(e)}
+            onResponderMove={(e) => this.MoveProgressBar(e)}
+            onResponderTerminationRequest={()=>false}
+            onResponderRelease={(e) => this.ReleaseProgressBar(e)}
             style={{
               flex: 1,
               alignItems: "center",
@@ -357,6 +384,7 @@ export class Player extends Component {
             <ProgressBar
               opacity={this.state.draggedPercentage}
               currentProgress={this.state.playingProgress}
+              isProgressBarDragging={this.state.isProgressBarDragging}
             ></ProgressBar>
 
             <View
@@ -365,31 +393,41 @@ export class Player extends Component {
                 flexDirection: "row",
                 justifyContent: "center",
                 margin: 30,
+                overflow: "hidden",
               }}
             >
               <Text
-                style={
-                  0 < this.state.index && !this.state.skipping
-                    ? { color: "#fff" }
-                    : { color: "#505050" }
-                }
+                style={{
+                  color:
+                    0 < this.state.index && !this.state.skipping
+                      ? "#fff"
+                      : "#505050",
+                  height: 25,
+                }}
                 onPress={() => this.previous()}
               >
                 <Icon name="backward" size={25}></Icon>
               </Text>
               <Text
                 onPress={() => this.togglePlay()}
-                style={{ color: "#fff", marginLeft: 50, marginRight: 50 }}
+                style={{
+                  color: "#fff",
+                  marginLeft: 50,
+                  marginRight: 50,
+                  height: 50,
+                }}
               >
                 {largeplaypause[this.state.play]}
               </Text>
               <Text
-                style={
-                  this.state.queue.length > this.state.index + 1 &&
-                  !this.state.skipping
-                    ? { color: "#fff" }
-                    : { color: "#505050" }
-                }
+                style={{
+                  color:
+                    this.state.queue.length > this.state.index + 1 &&
+                    !this.state.skipping
+                      ? "#fff"
+                      : "#505050",
+                  height: 25,
+                }}
               >
                 <Icon
                   name="forward"

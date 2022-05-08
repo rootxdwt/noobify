@@ -171,6 +171,14 @@ const skip = async () => {
   await sound.playAsync();
 };
 
+
+const changeProgress = async(mills) => {
+  try{
+    await sound.setPositionAsync(mills)
+  }catch(e){
+  }
+}
+
 const back = async () => {
   currentIndex--;
   if (currentIndex < 0) {
@@ -247,6 +255,7 @@ module.exports = {
   appendQueue,
   setIndex,
   audioFullDuration,
+  changeProgress
 };
 
 console.log("[Sound]", "Initialized sound");

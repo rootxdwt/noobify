@@ -45,79 +45,7 @@ export class Home extends Component {
             <Icon name="settings" size={25} />
           </Text>
         </View>
-        <View style={styles.Main}>
-          {this.state.shelves.map((shelf) => {
-            return (
-              <View key={shelf.id}>
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 20,
-                    color: "#fff",
-                    marginBottom: 20,
-                    marginLeft: 12,
-                    marginTop: 12,
-                  }}
-                >
-                  {shelf.title}
-                </Text>
-                <ScrollView
-                  showsHorizontalScrollIndicator={false}
-                  style={styles.MusicScroll}
-                  horizontal={true}
-                >
-                  {shelf.content.map((item) => {
-                    return (
-                      <View style={styles.MusicBox} key={item.id}>
-                        <Pressable
-                          onPress={() => this.props.showPlaylist(item.id)}
-                        >
-                          <Image
-                            style={{ width: 130, height: 130, borderRadius: 5 }}
-                            source={{
-                              uri: item.cover[0].url,
-                            }}
-                          ></Image>
-                          <View
-                            style={{
-                              flex: 1,
-                              alignItems: "flex-start",
-                              flexDirection: "column",
-                              width: 125,
-                            }}
-                          >
-                            <Text
-                              numberOfLines={1}
-                              style={{
-                                fontWeight: "bold",
-                                color: "#fff",
-                                marginTop: 10,
-                                textAlign: "left",
-                              }}
-                            >
-                              {item.name}
-                            </Text>
-                            <Text
-                              numberOfLines={1}
-                              style={{
-                                fontWeight: "normal",
-                                color: "#949494",
-                                textAlign: "left",
-                              }}
-                            >
-                              {item.description}
-                            </Text>
-                          </View>
-                        </Pressable>
-                      </View>
-                    );
-                  })}
-                </ScrollView>
-              </View>
-            );
-          })}
-
-          {/* <Text
+                  <Text
             style={{
               fontWeight: "bold",
               fontSize: 20,
@@ -292,7 +220,78 @@ export class Home extends Component {
                 </Text>
               </View>
             </View>
-          </View> */}
+          </View>
+        <View style={styles.Main}>
+          {this.state.shelves.map((shelf) => {
+            return (
+              <View key={shelf.id}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    color: "#fff",
+                    marginBottom: 20,
+                    marginLeft: 12,
+                    marginTop: 12,
+                  }}
+                >
+                  {shelf.title}
+                </Text>
+                <ScrollView
+                  showsHorizontalScrollIndicator={false}
+                  style={styles.MusicScroll}
+                  horizontal={true}
+                >
+                  {shelf.content.map((item) => {
+                    return (
+                      <View style={styles.MusicBox} key={item.id}>
+                        <Pressable
+                          onPress={() => this.props.showPlaylist(item.id)}
+                        >
+                          <Image
+                            style={{ width: 130, height: 130, borderRadius: 5 }}
+                            source={{
+                              uri: item.cover[0].url,
+                            }}
+                          ></Image>
+                          <View
+                            style={{
+                              flex: 1,
+                              alignItems: "flex-start",
+                              flexDirection: "column",
+                              width: 125,
+                            }}
+                          >
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                fontWeight: "bold",
+                                color: "#fff",
+                                marginTop: 10,
+                                textAlign: "left",
+                              }}
+                            >
+                              {item.name}
+                            </Text>
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                fontWeight: "normal",
+                                color: "#949494",
+                                textAlign: "left",
+                              }}
+                            >
+                              {item.description}
+                            </Text>
+                          </View>
+                        </Pressable>
+                      </View>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+            );
+          })}
 
           <View style={{ height: 200 }}></View>
         </View>
