@@ -171,16 +171,6 @@ const skip = async () => {
   await sound.playAsync();
 };
 
-const changeProgress = async (mills) => {
-  try {
-    await sound.setPositionAsync(mills, {
-      toleranceMillisBefore: 0,
-      toleranceMillisAfter: 0,
-    });
-  } catch (e) {
-    console.log(e)
-  }
-};
 
 const back = async () => {
   currentIndex--;
@@ -209,7 +199,14 @@ const setIndex = async (value) => {
 };
 
 const setPosition = async (position) => {
-  await sound.setPositionAsync(position);
+  try {
+    await sound.setPositionAsync(position, {
+      toleranceMillisBefore: 0,
+      toleranceMillisAfter: 0,
+    });
+  } catch (e) {
+    console.log(e)
+  }
 };
 
 const getLoopingMode = () => {
