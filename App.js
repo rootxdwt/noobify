@@ -22,7 +22,12 @@ export default class App extends React.Component {
   state = {
     currentPage: 0,
     playlist: null,
+    playlistType:""
   };
+  constructor(props){
+    super(props)
+    this.prevPage=[]
+  }
 
   componentDidMount() {
     const sound = audioLibrary.getSound();
@@ -43,8 +48,9 @@ export default class App extends React.Component {
     this.setState({ currentPage: page, playlist: null });
   };
 
-  showPlaylist = (id) => {
-    this.setState({ playlist: id });
+  showPlaylist = (id,type) => {
+    this.setState({ playlist: id , playlistType:type});
+    console.log(type)
   };
 
   render() {
@@ -52,7 +58,7 @@ export default class App extends React.Component {
       <SafeAreaView style={styles.ParentContainer}>
         <StatusBar barStyle="light-content" backgroundColor="#262626" />
         {this.state.playlist ? (
-          <Playlist id={this.state.playlist}></Playlist>
+          <Playlist id={this.state.playlist} prevFunc={()=>{this.setPage(0)}} type={this.state.playlistType}></Playlist>
         ) : (
           React.cloneElement(pages[this.state.currentPage], {
             showPlaylist: this.showPlaylist,

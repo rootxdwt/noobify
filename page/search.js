@@ -15,8 +15,8 @@ class Item extends Component {
   onPress = async () => {
     const { id } = this.props.data;
     console.log("[Item]", this.props.type, id);
-    if (this.props.type === "playlist") {
-      this.props.showPlaylist(id);
+    if (this.props.type === "playlist"||this.props.type === "album") {
+      this.props.showPlaylist(id, this.props.type);
     } else {
       const available = true;
 

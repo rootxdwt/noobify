@@ -20,7 +20,7 @@ const ProgressBar = (props) => {
         style={{
           position: "absolute",
           width: "80%",
-          height: 2,
+          height: props.isProgressBarDragging ? 10 : 2,
           backgroundColor: "#fff",
           opacity: props.opacity,
           margin: 30,
@@ -67,7 +67,8 @@ export class Player extends Component {
       backgroundColor: "#364954",
       playingProgress: 0,
       isProgressBarDragging: false,
-      progressBarStartPos:0
+      progressBarStartPos:0,
+      isLoading: false
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
@@ -108,7 +109,7 @@ export class Player extends Component {
   applyBackgroundColor = async () => {
     const current = this.state.queue[this.state.index];
     if (current) {
-      const images = current.album.cover[0].url.split("/")[4];
+      const images = ('album' in current?current.album.cover[0].url:audioLibrary.getUniversalThumbnail()).split("/")[4];
       const {
         data: { color_light },
       } = await api.get(`/image/${images}/color`);
@@ -204,6 +205,23 @@ export class Player extends Component {
     }
   }
 
+  setFullScreen(){
+    this.setState({ height: this.interfaceY });
+    this.setState({ maximized: true });
+    this.setState({ bottom: 0 });
+    this.setState({ borderRadius: 0 });
+    this.setState({ width: 1 });
+    this.setState({ draggedPercentage: 1 });
+  }
+
+  setMinimized() {
+    this.setState({ height: 57 });
+    this.setState({ maximized: false });
+    this.setState({ bottom: 101 });
+    this.setState({ borderRadius: 8 });
+    this.setState({ width: 0.95 });
+    this.setState({ draggedPercentage: 0 });
+  }
   Release() {
     var n;
     if (!this.state.maximized) {
@@ -212,21 +230,9 @@ export class Player extends Component {
       n = 1;
     }
     if (this.state.height < this.interfaceY / n - 123) {
-      //Minimized style
-      this.setState({ height: 57 });
-      this.setState({ maximized: false });
-      this.setState({ bottom: 101 });
-      this.setState({ borderRadius: 8 });
-      this.setState({ width: 0.95 });
-      this.setState({ draggedPercentage: 0 });
+      this.setMinimized()
     } else {
-      //Maximized style
-      this.setState({ height: this.interfaceY });
-      this.setState({ maximized: true });
-      this.setState({ bottom: 0 });
-      this.setState({ borderRadius: 0 });
-      this.setState({ width: 1 });
-      this.setState({ draggedPercentage: 1 });
+      this.setFullScreen()
     }
   }
 
@@ -301,7 +307,7 @@ export class Player extends Component {
                 marginRight: 10,
               }}
               source={{
-                uri: current.album.cover[0].url,
+                uri: 'album' in current?current.album.cover[0].url:audioLibrary.getUniversalThumbnail(),
               }}
             ></Image>
 

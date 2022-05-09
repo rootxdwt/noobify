@@ -9,6 +9,7 @@ let loopingMode = "none";
 let currentIndex = 0;
 let playingAudioFullDuration = 0;
 let loaded = false;
+let universalThumb=""
 
 // Handlers
 let queueUpdateRecivers = [];
@@ -129,13 +130,18 @@ const _loadAudio = async (id) => {
   var resp = await api.get(`/song/${id}/`);
   playingAudioFullDuration = resp.data.duration;
   console.log("[Sound]", "Loading", id);
-  await sound.loadAsync(
-    {
-      uri: `https://api.noobify.workers.dev/song/${id}/audio`,
-    },
-    {},
-    false
-  );
+  try{
+    await sound.loadAsync(
+      {
+        uri: `https://api.noobify.workers.dev/song/${id}/audio`,
+      },
+      {},
+      false
+    );
+  }catch(e){
+    console.log("[Sound]","Loading Error")
+  }
+
   return true;
 };
 
@@ -209,6 +215,14 @@ const setPosition = async (position) => {
   }
 };
 
+const setUniversalThumbnail = (uri) =>{
+  universalThumb = uri
+}
+
+const getUniversalThumbnail = () =>{
+ return universalThumb
+}
+
 const getLoopingMode = () => {
   return loopingMode;
 };
@@ -255,7 +269,8 @@ module.exports = {
   appendQueue,
   setIndex,
   audioFullDuration,
-  changeProgress,
+  setUniversalThumbnail,
+  getUniversalThumbnail
 };
 
 console.log("[Sound]", "Initialized sound");

@@ -246,7 +246,7 @@ export class Home extends Component {
                     return (
                       <View style={styles.MusicBox} key={item.id}>
                         <Pressable
-                          onPress={() => this.props.showPlaylist(item.id)}
+                          onPress={() => this.props.showPlaylist(item.id, "playlist")}
                         >
                           <Image
                             style={{ width: 130, height: 130, borderRadius: 5 }}
