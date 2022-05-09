@@ -109,7 +109,7 @@ export class Player extends Component {
   applyBackgroundColor = async () => {
     const current = this.state.queue[this.state.index];
     if (current) {
-      const images = ('album' in current?current.album.cover[0].url:audioLibrary.getUniversalThumbnail()).split("/")[4];
+      const images = (this.props.currentPlayingType=="album"?audioLibrary.getUniversalThumbnail():current.album.cover[0].url).split("/")[4];
       const {
         data: { color_light },
       } = await api.get(`/image/${images}/color`);
@@ -307,7 +307,7 @@ export class Player extends Component {
                 marginRight: 10,
               }}
               source={{
-                uri: 'album' in current?current.album.cover[0].url:audioLibrary.getUniversalThumbnail(),
+                uri: this.props.currentPlayingType=="album"?audioLibrary.getUniversalThumbnail():current.album.cover[0].url,
               }}
             ></Image>
 
