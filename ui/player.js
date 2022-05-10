@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, Dimensions,Animated } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  Animated,
+} from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import audioLibrary from "../audio";
@@ -65,11 +72,11 @@ export class Player extends Component {
       skipping: false,
       playingId: "",
       backgroundColorIndex: new Animated.Value(0),
-      backgroundColor: "#364954" ,
+      backgroundColor: "#364954",
       playingProgress: 0,
       isProgressBarDragging: false,
       progressBarStartPos: 0,
-      prevBg:"#364954",
+      prevBg: "#364954",
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
@@ -107,7 +114,6 @@ export class Player extends Component {
     });
   };
 
-
   applyBackgroundColor = async () => {
     const current = this.state.queue[this.state.index];
     if (current) {
@@ -121,19 +127,19 @@ export class Player extends Component {
       const {
         data: { color_light },
       } = await api.get(`/image/${images}/color`);
-      this.setState({backgroundColorIndex:new Animated.Value(0)})
-      this.setState({prevBg: this.state.backgroundColor})
+      this.setState({ backgroundColorIndex: new Animated.Value(0) });
+      this.setState({ prevBg: this.state.backgroundColor });
       this.setState({ backgroundColor: color_light["hex"] });
     } else {
-      this.setState({backgroundColorIndex:new Animated.Value(0)})
-      this.setState({ prevBg: this.state.backgroundColor});
+      this.setState({ backgroundColorIndex: new Animated.Value(0) });
+      this.setState({ prevBg: this.state.backgroundColor });
       this.setState({ backgroundColor: "#364954" });
     }
     Animated.timing(this.state.backgroundColorIndex, {
-      toValue:1,
+      toValue: 1,
       duration: 1000,
-      useNativeDriver: false
-    }).start()
+      useNativeDriver: false,
+    }).start();
   };
 
   previous() {
@@ -292,7 +298,7 @@ export class Player extends Component {
             borderRadius: this.state.borderRadius,
             backgroundColor: this.state.backgroundColorIndex.interpolate({
               inputRange: [0, 1],
-              outputRange:[this.state.prevBg, this.state.backgroundColor]
+              outputRange: [this.state.prevBg, this.state.backgroundColor],
             }),
             position: "absolute",
             bottom: this.state.bottom,
@@ -332,12 +338,10 @@ export class Player extends Component {
               }}
               source={{
                 uri:
-                  this.props.currentPlayingType === "album"
-                    ? audioLibrary.getUniversalThumbnail() == ""
-                      ? "https://i.ytimg.com/vi/Z-Q-Z-Q-Z-Q/maxresdefault.jpg"
-                      : audioLibrary.getUniversalThumbnail()
-                    : "album" in current
+                  "album" in current
                     ? current.album.cover[0].url
+                    : audioLibrary.getUniversalThumbnail() == ""
+                    ? "https://i.ytimg.com/vi/Z-Q-Z-Q-Z-Q/maxresdefault.jpg"
                     : audioLibrary.getUniversalThumbnail(),
               }}
             ></Image>
