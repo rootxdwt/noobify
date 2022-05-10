@@ -116,7 +116,7 @@ export class Playlist extends Component {
                       onPress={() => this.playFromPlaylistIndex(index)}
                     >
                       <Image
-                        style={{ width: 60, height: 60, borderRadius: 5 }}
+                        style={{ width: 55, height: 55, borderRadius: 5 }}
                         source={{
                           uri:
                             this.props.type == "playlist"
@@ -129,10 +129,10 @@ export class Playlist extends Component {
                           flex: 1,
                           alignItems: "flex-start",
                           flexDirection: "column",
-                          marginLeft: 10,
+                          marginLeft: 15,
                         }}
                       >
-                        <Text style={{ fontWeight: "bold", color: "#fff" }}>
+                        <Text style={{ fontWeight: "bold", color: "#fff" }} numberOfLines={1}ellipsizeMode="tail">
                           {item.name}
                         </Text>
                         <Text
