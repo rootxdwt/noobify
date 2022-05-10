@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions,Animated } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import audioLibrary from "../audio";
@@ -64,10 +64,12 @@ export class Player extends Component {
       index: 0,
       skipping: false,
       playingId: "",
-      backgroundColor: "#364954",
+      backgroundColorIndex: new Animated.Value(0),
+      backgroundColor: "#364954" ,
       playingProgress: 0,
       isProgressBarDragging: false,
       progressBarStartPos: 0,
+      prevBg:"#364954",
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
@@ -105,6 +107,7 @@ export class Player extends Component {
     });
   };
 
+
   applyBackgroundColor = async () => {
     const current = this.state.queue[this.state.index];
     if (current) {
@@ -118,10 +121,19 @@ export class Player extends Component {
       const {
         data: { color_light },
       } = await api.get(`/image/${images}/color`);
+      this.setState({backgroundColorIndex:new Animated.Value(0)})
+      this.setState({prevBg: this.state.backgroundColor})
       this.setState({ backgroundColor: color_light["hex"] });
     } else {
+      this.setState({backgroundColorIndex:new Animated.Value(0)})
+      this.setState({ prevBg: this.state.backgroundColor});
       this.setState({ backgroundColor: "#364954" });
     }
+    Animated.timing(this.state.backgroundColorIndex, {
+      toValue:1,
+      duration: 1000,
+      useNativeDriver: false
+    }).start()
   };
 
   previous() {
@@ -271,14 +283,17 @@ export class Player extends Component {
             bottom: this.state.bottom,
           }}
         ></View>
-        <View
+        <Animated.View
           style={{
             flex: 1,
             flexDirection: "column",
             width: this.state.width * 100 + "%",
             height: this.state.height,
             borderRadius: this.state.borderRadius,
-            backgroundColor: this.state.backgroundColor,
+            backgroundColor: this.state.backgroundColorIndex.interpolate({
+              inputRange: [0, 1],
+              outputRange:[this.state.prevBg, this.state.backgroundColor]
+            }),
             position: "absolute",
             bottom: this.state.bottom,
             overflow: "hidden",
@@ -468,7 +483,7 @@ export class Player extends Component {
               opacity: 1 - this.state.draggedPercentage,
             }}
           ></View>
-        </View>
+        </Animated.View>
       </>
     );
   }

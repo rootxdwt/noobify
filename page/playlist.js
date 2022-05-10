@@ -71,10 +71,10 @@ export class Playlist extends Component {
               <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 20 }}>
                 {this.state.data ? this.state.data.name : "Loading..."}
               </Text>
-              <Text style={{ color: "#949494" }}>
+              <Text style={{ color: "#949494" }} numberOfLines={1}>
                 {this.state.data
                   ? this.props.type == "playlist"
-                    ? this.state.data.songs[0].name + "..."
+                    ? `${this.state.data.songs[0].artists[0].name} and more`
                     : this.state.data.artists.map((elem) => elem.name).join(",")
                   : "Loading..."}
               </Text>
