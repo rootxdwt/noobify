@@ -137,10 +137,11 @@ const _loadAudio = async (id) => {
         {
           uri: `https://api.noobify.workers.dev/song/${id}/audio`,
         },
-        {},
+        {shouldPlay:true},
         false
       );
       loaded = true;
+
     } catch (e) {
       loaded = false;
       console.log("[Sound]", "Loading Error");

@@ -35,7 +35,6 @@ export class Playlist extends Component {
       await audioLibrary.setUniversalThumbnail(this.state.data.cover[0].url);
       await audioLibrary.setQueue(this.state.data.songs);
       await audioLibrary.setIndex(index);
-      await audioLibrary.setPlaying(true);
     }
   };
 
