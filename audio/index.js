@@ -104,7 +104,7 @@ const _loadAudio = async (id) => {
   loaded = true;
   const isAvailable = await checkAvailable(id);
   console.log("[Sound]", "Checking", id);
-  if (isAvailable == false) {
+  if (isAvailable == "false") {
     console.log("[Sound]", "Song is not available");
     queues = queues.filter((q) => q.id !== id);
     queueUpdateRecivers.forEach((reciever) => reciever(queues));
@@ -140,6 +140,7 @@ const _loadAudio = async (id) => {
     );
   }catch(e){
     console.log("[Sound]","Loading Error")
+    await _unloadAudio()
   }
 
   return true;
