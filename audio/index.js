@@ -81,9 +81,10 @@ const setPlaying = async (playing) => {
     }
     if (loaded === false) {
       await _loadAudio(queues[currentIndex].id);
+    }else{
+      console.log("[Sound]", "Playing");
+      await sound.playAsync();
     }
-    console.log("[Sound]", "Playing");
-    await sound.playAsync();
   } else {
     console.log("[Sound]", "Pausing");
     await sound.pauseAsync();
@@ -101,7 +102,6 @@ const audioFullDuration = () => {
 };
 
 const _loadAudio = async (id) => {
-  loaded = true;
   const isAvailable = await checkAvailable(id);
   console.log("[Sound]", "Checking", id);
   console.log(isAvailable, typeof isAvailable);
@@ -131,19 +131,25 @@ const _loadAudio = async (id) => {
   var resp = await api.get(`/song/${id}/`);
   playingAudioFullDuration = resp.data.duration;
   console.log("[Sound]", "Loading", id);
-  try {
-    await sound.loadAsync(
-      {
-        uri: `https://api.noobify.workers.dev/song/${id}/audio`,
-      },
-      {},
-      false
-    );
-  } catch (e) {
-    console.log("[Sound]", "Loading Error");
-    await _unloadAudio();
+  if(!loaded){
+    try {
+      await sound.loadAsync(
+        {
+          uri: `https://api.noobify.workers.dev/song/${id}/audio`,
+        },
+        {},
+        false
+      );
+      loaded = true;
+    } catch (e) {
+      loaded = false;
+      console.log("[Sound]", "Loading Error");
+      await _unloadAudio();
+    }
+  
+  }else{
+    console.log("[Sound]","Unmount current audio before playing a new one")
   }
-
   return true;
 };
 
