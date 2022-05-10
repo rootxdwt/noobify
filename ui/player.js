@@ -67,13 +67,13 @@ export class Player extends Component {
       backgroundColor: "#364954",
       playingProgress: 0,
       isProgressBarDragging: false,
-      progressBarStartPos:0,
+      progressBarStartPos: 0,
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
     this.interfaceX = Dimensions.get("window").width;
     this.prevProgress = 0;
-    this.playingStat=0;
+    this.playingStat = 0;
   }
 
   componentDidMount = () => {
@@ -108,7 +108,13 @@ export class Player extends Component {
   applyBackgroundColor = async () => {
     const current = this.state.queue[this.state.index];
     if (current) {
-      const images = (this.props.currentPlayingType==="album"?audioLibrary.getUniversalThumbnail():( 'album' in current?current.album.cover[0].url:audioLibrary.getUniversalThumbnail())).split("/")[4];
+      const images = (
+        this.props.currentPlayingType === "album"
+          ? audioLibrary.getUniversalThumbnail()
+          : "album" in current
+          ? current.album.cover[0].url
+          : audioLibrary.getUniversalThumbnail()
+      ).split("/")[4];
       const {
         data: { color_light },
       } = await api.get(`/image/${images}/color`);
@@ -153,24 +159,29 @@ export class Player extends Component {
   }
 
   ChangeProgressBarState = (e) => {
-      audioLibrary.setPlaying(false);
-      this.setState({progressBarStartPos: e.nativeEvent.pageX})
-      this.setState({ isProgressBarDragging: true });
+    audioLibrary.setPlaying(false);
+    this.setState({ progressBarStartPos: e.nativeEvent.pageX });
+    this.setState({ isProgressBarDragging: true });
   };
-  MoveProgressBar = async(e) => {
-    var draggedProg = (e.nativeEvent.pageX-this.state.progressBarStartPos)/(this.interfaceX*0.8)
-    if(this.playingStat/100+draggedProg<=1){
-      this.setState({playingProgress: this.playingStat+draggedProg*100})
+  MoveProgressBar = async (e) => {
+    var draggedProg =
+      (e.nativeEvent.pageX - this.state.progressBarStartPos) /
+      (this.interfaceX * 0.8);
+    if (this.playingStat / 100 + draggedProg <= 1) {
+      this.setState({ playingProgress: this.playingStat + draggedProg * 100 });
       //console.log((this.playingStat/100+draggedProg)*audioLibrary.audioFullDuration())
-      await audioLibrary.setPosition((this.playingStat/100+draggedProg)*audioLibrary.audioFullDuration())
-    }else{
-      this.setState({playingProgress: 100})
+      await audioLibrary.setPosition(
+        (this.playingStat / 100 + draggedProg) *
+          audioLibrary.audioFullDuration()
+      );
+    } else {
+      this.setState({ playingProgress: 100 });
     }
-  }
-  ReleaseProgressBar = (e)=> {
-    audioLibrary.setPlaying(true)
+  };
+  ReleaseProgressBar = (e) => {
+    audioLibrary.setPlaying(true);
     this.setState({ isProgressBarDragging: false });
-  }
+  };
 
   togglePlay() {
     var n;
@@ -183,7 +194,6 @@ export class Player extends Component {
         break;
     }
     audioLibrary.setPlaying(n);
-
   }
 
   startMove(e) {
@@ -204,7 +214,7 @@ export class Player extends Component {
     }
   }
 
-  setFullScreen(){
+  setFullScreen() {
     this.setState({ height: this.interfaceY });
     this.setState({ maximized: true });
     this.setState({ bottom: 0 });
@@ -229,9 +239,9 @@ export class Player extends Component {
       n = 1;
     }
     if (this.state.height < this.interfaceY / n - 123) {
-      this.setMinimized()
+      this.setMinimized();
     } else {
-      this.setFullScreen()
+      this.setFullScreen();
     }
   }
 
@@ -306,7 +316,14 @@ export class Player extends Component {
                 marginRight: 10,
               }}
               source={{
-                uri: this.props.currentPlayingType==="album"?audioLibrary.getUniversalThumbnail():( 'album' in current?current.album.cover[0].url:audioLibrary.getUniversalThumbnail())
+                uri:
+                  this.props.currentPlayingType === "album"
+                    ? audioLibrary.getUniversalThumbnail() == ""
+                      ? "https://i.ytimg.com/vi/Z-Q-Z-Q-Z-Q/maxresdefault.jpg"
+                      : audioLibrary.getUniversalThumbnail()
+                    : "album" in current
+                    ? current.album.cover[0].url
+                    : audioLibrary.getUniversalThumbnail(),
               }}
             ></Image>
 
@@ -347,10 +364,10 @@ export class Player extends Component {
           </View>
 
           <View
-            onMoveShouldSetResponder={()=>true}
+            onMoveShouldSetResponder={() => true}
             onResponderGrant={(e) => this.ChangeProgressBarState(e)}
             onResponderMove={(e) => this.MoveProgressBar(e)}
-            onResponderTerminationRequest={()=>false}
+            onResponderTerminationRequest={() => false}
             onResponderRelease={(e) => this.ReleaseProgressBar(e)}
             style={{
               flex: 1,

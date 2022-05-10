@@ -9,7 +9,7 @@ let loopingMode = "none";
 let currentIndex = 0;
 let playingAudioFullDuration = 0;
 let loaded = false;
-let universalThumb=""
+let universalThumb = "";
 
 // Handlers
 let queueUpdateRecivers = [];
@@ -104,8 +104,8 @@ const _loadAudio = async (id) => {
   loaded = true;
   const isAvailable = await checkAvailable(id);
   console.log("[Sound]", "Checking", id);
-  console.log(isAvailable, typeof isAvailable)
-  if (isAvailable == "false"|| isAvailable === false) {
+  console.log(isAvailable, typeof isAvailable);
+  if (isAvailable == "false" || isAvailable === false) {
     console.log("[Sound]", "Song is not available");
     queues = queues.filter((q) => q.id !== id);
     queueUpdateRecivers.forEach((reciever) => reciever(queues));
@@ -131,7 +131,7 @@ const _loadAudio = async (id) => {
   var resp = await api.get(`/song/${id}/`);
   playingAudioFullDuration = resp.data.duration;
   console.log("[Sound]", "Loading", id);
-  try{
+  try {
     await sound.loadAsync(
       {
         uri: `https://api.noobify.workers.dev/song/${id}/audio`,
@@ -139,9 +139,9 @@ const _loadAudio = async (id) => {
       {},
       false
     );
-  }catch(e){
-    console.log("[Sound]","Loading Error")
-    await _unloadAudio()
+  } catch (e) {
+    console.log("[Sound]", "Loading Error");
+    await _unloadAudio();
   }
 
   return true;
@@ -179,7 +179,6 @@ const skip = async () => {
   await sound.playAsync();
 };
 
-
 const back = async () => {
   currentIndex--;
   if (currentIndex < 0) {
@@ -213,17 +212,17 @@ const setPosition = async (position) => {
       toleranceMillisAfter: 0,
     });
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
 };
 
-const setUniversalThumbnail = (uri) =>{
-  universalThumb = uri
-}
+const setUniversalThumbnail = (uri) => {
+  universalThumb = uri;
+};
 
-const getUniversalThumbnail = () =>{
- return universalThumb
-}
+const getUniversalThumbnail = () => {
+  return universalThumb;
+};
 
 const getLoopingMode = () => {
   return loopingMode;
@@ -272,7 +271,7 @@ module.exports = {
   setIndex,
   audioFullDuration,
   setUniversalThumbnail,
-  getUniversalThumbnail
+  getUniversalThumbnail,
 };
 
 console.log("[Sound]", "Initialized sound");

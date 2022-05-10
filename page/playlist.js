@@ -11,20 +11,28 @@ export class Playlist extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props.type)
-    console.log(this.props.id)
-    console.log((this.props.type==="playlist"?"/playlist/":"/album/")+ this.props.id)
-    api.get((this.props.type==="playlist"?"/playlist/":"/album/")+ this.props.id).then((res) => {
-      console.log("[Playlist]", "Fetched");
-      this.setState({
-        data: res.data,
+    console.log(this.props.type);
+    console.log(this.props.id);
+    console.log(
+      (this.props.type === "playlist" ? "/playlist/" : "/album/") +
+        this.props.id
+    );
+    api
+      .get(
+        (this.props.type === "playlist" ? "/playlist/" : "/album/") +
+          this.props.id
+      )
+      .then((res) => {
+        console.log("[Playlist]", "Fetched");
+        this.setState({
+          data: res.data,
+        });
       });
-    });
   }
 
   playFromPlaylistIndex = async (index) => {
-    if(this.state.data.songs){
-      await audioLibrary.setUniversalThumbnail(this.state.data.cover[0].url)
+    if (this.state.data.songs) {
+      await audioLibrary.setUniversalThumbnail(this.state.data.cover[0].url);
       await audioLibrary.setQueue(this.state.data.songs);
       await audioLibrary.setIndex(index);
       await audioLibrary.setPlaying(true);
@@ -52,7 +60,9 @@ export class Playlist extends Component {
             <Image
               source={{
                 uri: this.state.data
-                  ? (this.props.type=="playlist"?this.state.data.songs[0].album.cover[0].url:this.state.data.cover[0].url)
+                  ? this.props.type == "playlist"
+                    ? this.state.data.songs[0].album.cover[0].url
+                    : this.state.data.cover[0].url
                   : "https://i.ytimg.com/vi/Z-Q-Z-Q-Z-Q/maxresdefault.jpg",
               }}
               style={{ width: 150, height: 150, borderRadius: 5 }}
@@ -63,7 +73,9 @@ export class Playlist extends Component {
               </Text>
               <Text style={{ color: "#949494" }}>
                 {this.state.data
-                  ? (this.props.type=="playlist"?this.state.data.songs[0].name + "...":this.state.data.artists.map((elem)=>elem.name).join(","))
+                  ? this.props.type == "playlist"
+                    ? this.state.data.songs[0].name + "..."
+                    : this.state.data.artists.map((elem) => elem.name).join(",")
                   : "Loading..."}
               </Text>
               <Pressable
@@ -76,14 +88,14 @@ export class Playlist extends Component {
                   width: 100,
                   padding: 0,
                   marginTop: 20,
-                  borderRadius: 5
+                  borderRadius: 5,
                 }}
-                onPress={()=>this.playFromPlaylistIndex(0)}
+                onPress={() => this.playFromPlaylistIndex(0)}
               >
-                <Text style={{ color: "#fff",marginRight: 5 }}>
+                <Text style={{ color: "#fff", marginRight: 5 }}>
                   <Icon name="play-arrow" size={25}></Icon>
                 </Text>
-                <Text style={{ color: "#fff",fontWeight:"bold" }}>Play</Text>
+                <Text style={{ color: "#fff", fontWeight: "bold" }}>Play</Text>
               </Pressable>
             </View>
           </View>
@@ -106,7 +118,10 @@ export class Playlist extends Component {
                       <Image
                         style={{ width: 60, height: 60, borderRadius: 5 }}
                         source={{
-                          uri: this.props.type=="playlist"?item.album.cover[0].url:this.state.data.cover[0].url,
+                          uri:
+                            this.props.type == "playlist"
+                              ? item.album.cover[0].url
+                              : this.state.data.cover[0].url,
                         }}
                       ></Image>
                       <View
@@ -123,7 +138,9 @@ export class Playlist extends Component {
                         <Text
                           style={{ fontWeight: "normal", color: "#949494" }}
                         >
-                          {this.props.type=="playlist"?item.artists.map((elem)=>elem.name).join(","):item.artist}
+                          {this.props.type == "playlist"
+                            ? item.artists.map((elem) => elem.name).join(",")
+                            : item.artist}
                         </Text>
                       </View>
                     </Pressable>
