@@ -66,7 +66,7 @@ export default class App extends React.Component {
         )}
 
         <View style={styles.Container}>
-          <Player></Player>
+          <Player currentPlayingType={this.state.playlistType}></Player>
           <BottomMenu setPage={this.setPage}></BottomMenu>
         </View>
       </SafeAreaView>

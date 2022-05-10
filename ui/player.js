@@ -68,7 +68,6 @@ export class Player extends Component {
       playingProgress: 0,
       isProgressBarDragging: false,
       progressBarStartPos:0,
-      isLoading: false
     };
     this.touchStart = 0;
     this.interfaceY = Dimensions.get("window").height;
@@ -109,7 +108,7 @@ export class Player extends Component {
   applyBackgroundColor = async () => {
     const current = this.state.queue[this.state.index];
     if (current) {
-      const images = (this.props.currentPlayingType=="album"?audioLibrary.getUniversalThumbnail():current.album.cover[0].url).split("/")[4];
+      const images = (this.props.currentPlayingType==="album"?audioLibrary.getUniversalThumbnail():( 'album' in current?current.album.cover[0].url:audioLibrary.getUniversalThumbnail())).split("/")[4];
       const {
         data: { color_light },
       } = await api.get(`/image/${images}/color`);
@@ -307,7 +306,7 @@ export class Player extends Component {
                 marginRight: 10,
               }}
               source={{
-                uri: this.props.currentPlayingType=="album"?audioLibrary.getUniversalThumbnail():current.album.cover[0].url,
+                uri: this.props.currentPlayingType==="album"?audioLibrary.getUniversalThumbnail():( 'album' in current?current.album.cover[0].url:audioLibrary.getUniversalThumbnail())
               }}
             ></Image>
 
