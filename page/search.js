@@ -25,6 +25,7 @@ class Item extends Component {
         const newQueue = [this.props.data, ...recommendations.data];
         await audioLibrary.setQueue(newQueue);
         await audioLibrary.setIndex(0);
+        await audioLibrary.setPlaying(true);
       }
     }
   };
