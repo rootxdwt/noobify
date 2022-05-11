@@ -127,13 +127,17 @@ export class Player extends Component {
       const {
         data: { color_light },
       } = await api.get(`/image/${images}/color`);
-      this.setState({ backgroundColorIndex: new Animated.Value(0) });
-      this.setState({ prevBg: this.state.backgroundColor });
-      this.setState({ backgroundColor: color_light["hex"] });
+      this.setState({
+        backgroundColorIndex: new Animated.Value(0),
+        prevBg: this.state.backgroundColor ,
+        backgroundColor: color_light["hex"]
+      })
     } else {
-      this.setState({ backgroundColorIndex: new Animated.Value(0) });
-      this.setState({ prevBg: this.state.backgroundColor });
-      this.setState({ backgroundColor: "#364954" });
+      this.setState({
+        backgroundColorIndex: new Animated.Value(0),
+        prevBg: this.state.backgroundColor ,
+        backgroundColor: "#364954"
+      })
     }
     Animated.timing(this.state.backgroundColorIndex, {
       toValue: 1,
