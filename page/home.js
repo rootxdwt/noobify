@@ -45,182 +45,180 @@ export class Home extends Component {
             <Icon name="settings" size={25} />
           </Text>
         </View>
-                  <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 20,
-              color: "#fff",
-              margin: 20,
-              marginLeft: 12,
-            }}
-          >
-            Listen Again
-          </Text>
-          <View style={styles.MusicFixedConti}>
-            <View style={styles.wideMusicBox}>
-              <Image
-                style={{ width: 60, height: 60, borderRadius: 0 }}
-                source={{
-                  uri: "https://cdn.xdcs.me/static/main/EZZP8m1U8AAfAyk.jpg",
-                }}
-              ></Image>
-              <View
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 20,
+            color: "#fff",
+            margin: 20,
+            marginLeft: 12,
+          }}
+        >
+          Listen Again
+        </Text>
+        <View style={styles.MusicFixedConti}>
+          <View style={styles.wideMusicBox}>
+            <Image
+              style={{ width: 60, height: 60, borderRadius: 0 }}
+              source={{
+                uri: "https://cdn.xdcs.me/static/main/EZZP8m1U8AAfAyk.jpg",
+              }}
+            ></Image>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "flex-start",
+                flexDirection: "column",
+                marginLeft: 10,
+              }}
+            >
+              <Text
                 style={{
-                  flex: 1,
-                  alignItems: "flex-start",
-                  flexDirection: "column",
-                  marginLeft: 10,
+                  fontWeight: "bold",
+                  color: "#fff",
+                  marginTop: 10,
+                  fontSize: 12,
                 }}
               >
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    color: "#fff",
-                    marginTop: 10,
-                    fontSize: 12,
-                  }}
-                >
-                  MORE AND MORE
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: "normal",
-                    color: "#949494",
-                    fontSize: 9,
-                  }}
-                >
-                  Single-TWICE
-                </Text>
-              </View>
-            </View>
-            <View style={styles.wideMusicBox}>
-              <Image
-                style={{ width: 60, height: 60, borderRadius: 0 }}
-                source={{
-                  uri: "https://cdn.xdcs.me/static/main/11ce49830b65761f2d0725eddaccc3cc.jpg",
-                }}
-              ></Image>
-              <View
+                MORE AND MORE
+              </Text>
+              <Text
                 style={{
-                  flex: 1,
-                  alignItems: "flex-start",
-                  flexDirection: "column",
-                  marginLeft: 10,
+                  fontWeight: "normal",
+                  color: "#949494",
+                  fontSize: 9,
                 }}
               >
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    color: "#fff",
-                    marginTop: 10,
-                    fontSize: 12,
-                  }}
-                >
-                  WHAT IS LOVE
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: "normal",
-                    color: "#949494",
-                    fontSize: 9,
-                  }}
-                >
-                  Single-TWICE
-                </Text>
-              </View>
+                Single-TWICE
+              </Text>
             </View>
           </View>
+          <View style={styles.wideMusicBox}>
+            <Image
+              style={{ width: 60, height: 60, borderRadius: 0 }}
+              source={{
+                uri: "https://cdn.xdcs.me/static/main/11ce49830b65761f2d0725eddaccc3cc.jpg",
+              }}
+            ></Image>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "flex-start",
+                flexDirection: "column",
+                marginLeft: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: "#fff",
+                  marginTop: 10,
+                  fontSize: 12,
+                }}
+              >
+                WHAT IS LOVE
+              </Text>
+              <Text
+                style={{
+                  fontWeight: "normal",
+                  color: "#949494",
+                  fontSize: 9,
+                }}
+              >
+                Single-TWICE
+              </Text>
+            </View>
+          </View>
+        </View>
 
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 20,
-              color: "#fff",
-              marginBottom: 20,
-              marginLeft: 12,
-            }}
-          >
-            Songs
-          </Text>
-          <View style={{ flex: 1, flexDirection: "column", marginLeft: 10 }}>
-            <View style={styles.superWideMusicBox}>
-              <Image
-                style={{ width: 60, height: 60, borderRadius: 5 }}
-                source={{
-                  uri: "https://cdn.xdcs.me/static/main/EZZP8m1U8AAfAyk.jpg",
-                }}
-              ></Image>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "flex-start",
-                  flexDirection: "column",
-                  marginLeft: 10,
-                }}
-              >
-                <Text style={{ fontWeight: "bold", color: "#fff" }}>
-                  MORE AND MORE
-                </Text>
-                <Text style={{ fontWeight: "normal", color: "#949494" }}>
-                  Single-TWICE
-                </Text>
-              </View>
-            </View>
-            <View style={styles.superWideMusicBox}>
-              <Image
-                style={{ width: 60, height: 60, borderRadius: 5 }}
-                source={{
-                  uri: "https://cdn.xdcs.me/static/main/11ce49830b65761f2d0725eddaccc3cc.jpg",
-                }}
-              ></Image>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "flex-start",
-                  flexDirection: "column",
-                  marginLeft: 10,
-                }}
-              >
-                <Text style={{ fontWeight: "bold", color: "#fff" }}>
-                  WHAT IS LOVE
-                </Text>
-                <Text style={{ fontWeight: "normal", color: "#949494" }}>
-                  Album-TWICE
-                </Text>
-              </View>
-            </View>
-            <View style={styles.superWideMusicBox}>
-              <Image
-                style={{ width: 60, height: 60, borderRadius: 5 }}
-                source={{
-                  uri: "https://cdn.xdcs.me/static/main/Dhl2AOUUcAABtwH.jpg",
-                }}
-              ></Image>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "flex-start",
-                  flexDirection: "column",
-                  marginLeft: 10,
-                }}
-              >
-                <Text
-                  style={{ fontWeight: "bold", color: "#fff", fontSize: 14 }}
-                >
-                  SUMMER NIGHTS
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: "normal",
-                    color: "#949494",
-                    fontSize: 14,
-                  }}
-                >
-                  Album-TWICE
-                </Text>
-              </View>
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 20,
+            color: "#fff",
+            marginBottom: 20,
+            marginLeft: 12,
+          }}
+        >
+          Songs
+        </Text>
+        <View style={{ flex: 1, flexDirection: "column", marginLeft: 10 }}>
+          <View style={styles.superWideMusicBox}>
+            <Image
+              style={{ width: 60, height: 60, borderRadius: 5 }}
+              source={{
+                uri: "https://cdn.xdcs.me/static/main/EZZP8m1U8AAfAyk.jpg",
+              }}
+            ></Image>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "flex-start",
+                flexDirection: "column",
+                marginLeft: 10,
+              }}
+            >
+              <Text style={{ fontWeight: "bold", color: "#fff" }}>
+                MORE AND MORE
+              </Text>
+              <Text style={{ fontWeight: "normal", color: "#949494" }}>
+                Single-TWICE
+              </Text>
             </View>
           </View>
+          <View style={styles.superWideMusicBox}>
+            <Image
+              style={{ width: 60, height: 60, borderRadius: 5 }}
+              source={{
+                uri: "https://cdn.xdcs.me/static/main/11ce49830b65761f2d0725eddaccc3cc.jpg",
+              }}
+            ></Image>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "flex-start",
+                flexDirection: "column",
+                marginLeft: 10,
+              }}
+            >
+              <Text style={{ fontWeight: "bold", color: "#fff" }}>
+                WHAT IS LOVE
+              </Text>
+              <Text style={{ fontWeight: "normal", color: "#949494" }}>
+                Album-TWICE
+              </Text>
+            </View>
+          </View>
+          <View style={styles.superWideMusicBox}>
+            <Image
+              style={{ width: 60, height: 60, borderRadius: 5 }}
+              source={{
+                uri: "https://cdn.xdcs.me/static/main/Dhl2AOUUcAABtwH.jpg",
+              }}
+            ></Image>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "flex-start",
+                flexDirection: "column",
+                marginLeft: 10,
+              }}
+            >
+              <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 14 }}>
+                SUMMER NIGHTS
+              </Text>
+              <Text
+                style={{
+                  fontWeight: "normal",
+                  color: "#949494",
+                  fontSize: 14,
+                }}
+              >
+                Album-TWICE
+              </Text>
+            </View>
+          </View>
+        </View>
         <View style={styles.Main}>
           {this.state.shelves.map((shelf) => {
             return (
@@ -246,7 +244,9 @@ export class Home extends Component {
                     return (
                       <View style={styles.MusicBox} key={item.id}>
                         <Pressable
-                          onPress={() => this.props.showPlaylist(item.id, "playlist")}
+                          onPress={() =>
+                            this.props.showPlaylist(item.id, "playlist")
+                          }
                         >
                           <Image
                             style={{ width: 130, height: 130, borderRadius: 5 }}
