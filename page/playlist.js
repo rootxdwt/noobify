@@ -32,7 +32,9 @@ export class Playlist extends Component {
 
   playFromPlaylistIndex = async (index) => {
     if (this.state.data.songs) {
-      await audioLibrary.setUniversalThumbnail(this.state.data.cover[0].url);
+      if(this.props.type=="album"){
+        await audioLibrary.setUniversalThumbnail(this.state.data.cover[0].url);
+      }
       await audioLibrary.setQueue(this.state.data.songs);
       await audioLibrary.setIndex(index);
       await audioLibrary.setPlaying(true);
