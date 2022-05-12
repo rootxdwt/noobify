@@ -214,9 +214,14 @@ const setIndex = async (value) => {
 
 const setPosition = async (position) => {
   try {
-    await sound.setPositionAsync(position, {
-      toleranceMillisBefore: 0,
-      toleranceMillisAfter: 0,
+    // await sound.setPositionAsync(position, {
+    //   toleranceMillisBefore: 0,
+    //   toleranceMillisAfter: 0,
+    // });
+    await sound.setStatusAsync({ 
+      positionMillis: position, 
+      seekMillisToleranceBefore: 0, 
+      seekMillisToleranceAfter: 0 
     });
   } catch (e) {
     console.log(e);
