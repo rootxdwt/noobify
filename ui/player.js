@@ -190,18 +190,24 @@ export class Player extends Component {
       (e.nativeEvent.pageX - this.state.progressBarStartPos) /
       (this.interfaceX * 0.8);
     if (this.playingStat / 100 + draggedProg <= 1) {
+      if(this.playingStat / 100 + draggedProg <= 0){
+        this.setState({ playingProgress: 0 });
+      }
       this.setState({ playingProgress: this.playingStat + draggedProg * 100 });
       //console.log((this.playingStat/100+draggedProg)*audioLibrary.audioFullDuration())
-      await audioLibrary.setPosition(
-        (this.playingStat / 100 + draggedProg) *
-          audioLibrary.audioFullDuration()
-      );
     } else {
       this.setState({ playingProgress: 100 });
     }
   };
-  ReleaseProgressBar = (e) => {
-    audioLibrary.setPlaying(true);
+  ReleaseProgressBar = async(e) => {
+    var draggedProg =
+    (e.nativeEvent.pageX - this.state.progressBarStartPos) /
+    (this.interfaceX * 0.8);
+    await audioLibrary.setPosition(
+      (this.playingStat / 100 + draggedProg) *
+        audioLibrary.audioFullDuration()
+    );
+    await audioLibrary.setPlaying(true);
     this.setState({ isProgressBarDragging: false });
   };
 
@@ -387,11 +393,6 @@ export class Player extends Component {
           </View>
 
           <View
-            onMoveShouldSetResponder={() => true}
-            onResponderGrant={(e) => this.ChangeProgressBarState(e)}
-            onResponderMove={(e) => this.MoveProgressBar(e)}
-            onResponderTerminationRequest={() => false}
-            onResponderRelease={(e) => this.ReleaseProgressBar(e)}
             style={{
               flex: 1,
               alignItems: "center",
@@ -426,11 +427,26 @@ export class Player extends Component {
             >
               {current.artists.map((artist) => artist.name).join(", ")}
             </Text>
+            <View
+              onMoveShouldSetResponder={() => true}
+              onResponderGrant={(e) => this.ChangeProgressBarState(e)}
+              onResponderMove={(e) => this.MoveProgressBar(e)}
+              onResponderTerminationRequest={() => false}
+              onResponderRelease={(e) => this.ReleaseProgressBar(e)}
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
             <ProgressBar
               opacity={this.state.draggedPercentage}
               currentProgress={this.state.playingProgress}
               isProgressBarDragging={this.state.isProgressBarDragging}
             ></ProgressBar>
+            </View>
+
 
             <View
               style={{

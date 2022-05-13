@@ -133,9 +133,10 @@ const _loadAudio = async (id) => {
   console.log("[Sound]", "Loading", id);
   if(!loaded){
     try {
+      
       await sound.loadAsync(
         {
-          uri: `https://api.noobify.workers.dev/song/${id}/audio`,
+          uri: `https://xonos.tools/getSpotifyTrack/${id}.mp3`,
         },
         {shouldPlay:true},
         false
