@@ -81,7 +81,7 @@ const setPlaying = async (playing) => {
     }
     if (loaded === false) {
       await _loadAudio(queues[currentIndex].id);
-    }else{
+    } else {
       console.log("[Sound]", "Playing");
       await sound.playAsync();
     }
@@ -131,26 +131,24 @@ const _loadAudio = async (id) => {
   var resp = await api.get(`/song/${id}/`);
   playingAudioFullDuration = resp.data.duration;
   console.log("[Sound]", "Loading", id);
-  if(!loaded){
+  if (!loaded) {
     try {
       
       await sound.loadAsync(
         {
           uri: `https://xonos.tools/getSpotifyTrack/${id}.mp3`,
         },
-        {shouldPlay:true},
+        { shouldPlay: true },
         false
       );
       loaded = true;
-
     } catch (e) {
       loaded = false;
       console.log("[Sound]", "Loading Error");
       await _unloadAudio();
     }
-  
-  }else{
-    console.log("[Sound]","Unmount current audio before playing a new one")
+  } else {
+    console.log("[Sound]", "Unmount current audio before playing a new one");
   }
   return true;
 };
@@ -215,9 +213,14 @@ const setIndex = async (value) => {
 
 const setPosition = async (position) => {
   try {
-    await sound.setPositionAsync(position, {
-      toleranceMillisBefore: 0,
-      toleranceMillisAfter: 0,
+    // await sound.setPositionAsync(position, {
+    //   toleranceMillisBefore: 0,
+    //   toleranceMillisAfter: 0,
+    // });
+    await sound.setStatusAsync({
+      positionMillis: position,
+      seekMillisToleranceBefore: 0,
+      seekMillisToleranceAfter: 0,
     });
   } catch (e) {
     console.log(e);

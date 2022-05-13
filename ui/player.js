@@ -129,15 +129,15 @@ export class Player extends Component {
       } = await api.get(`/image/${images}/color`);
       this.setState({
         backgroundColorIndex: new Animated.Value(0),
-        prevBg: this.state.backgroundColor ,
-        backgroundColor: color_light["hex"]
-      })
+        prevBg: this.state.backgroundColor,
+        backgroundColor: color_light["hex"],
+      });
     } else {
       this.setState({
         backgroundColorIndex: new Animated.Value(0),
-        prevBg: this.state.backgroundColor ,
-        backgroundColor: "#364954"
-      })
+        prevBg: this.state.backgroundColor,
+        backgroundColor: "#364954",
+      });
     }
     Animated.timing(this.state.backgroundColorIndex, {
       toValue: 1,

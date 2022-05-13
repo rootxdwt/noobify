@@ -32,7 +32,7 @@ export class Playlist extends Component {
 
   playFromPlaylistIndex = async (index) => {
     if (this.state.data.songs) {
-      if(this.props.type=="album"){
+      if (this.props.type == "album") {
         await audioLibrary.setUniversalThumbnail(this.state.data.cover[0].url);
       }
       await audioLibrary.setQueue(this.state.data.songs);
@@ -134,7 +134,11 @@ export class Playlist extends Component {
                           marginLeft: 15,
                         }}
                       >
-                        <Text style={{ fontWeight: "bold", color: "#fff" }} numberOfLines={1}ellipsizeMode="tail">
+                        <Text
+                          style={{ fontWeight: "bold", color: "#fff" }}
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                        >
                           {item.name}
                         </Text>
                         <Text
