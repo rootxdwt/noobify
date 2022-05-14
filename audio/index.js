@@ -1,5 +1,6 @@
 import { Audio } from "expo-av";
 import api from "../api";
+// import TrackPlayer from "react-native-track-player";
 
 let sound = null;
 let queues = [];
@@ -10,6 +11,8 @@ let currentIndex = 0;
 let playingAudioFullDuration = 0;
 let loaded = false;
 let universalThumb = "";
+
+// Playback Setup
 
 // Handlers
 let queueUpdateRecivers = [];
@@ -133,7 +136,6 @@ const _loadAudio = async (id) => {
   console.log("[Sound]", "Loading", id);
   if (!loaded) {
     try {
-      
       await sound.loadAsync(
         {
           uri: `https://xonos.tools/getSpotifyTrack/${id}.mp3`,

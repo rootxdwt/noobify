@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { Audio } from "expo-av";
 import audioLibrary from "./audio";
+import TrackPlayer from "react-native-track-player";
 
 const pages = [<Home></Home>, <Search></Search>, <My></My>];
 
@@ -29,8 +30,14 @@ export default class App extends React.Component {
     this.prevPage = [];
   }
 
-  componentDidMount() {
-    const sound = audioLibrary.getSound();
+  async componentDidMount() {
+    // const sound = audioLibrary.getSound();
+    console.log("noob");
+    try {
+      console.log(TrackPlayer.setupPlayer.call(this));
+    } catch {
+      // await TrackPlayer.setupPlayer();
+    }
     if (sound === null) {
       console.log("[App]", "No sound found");
       audioLibrary.setSound(new Audio.Sound());
