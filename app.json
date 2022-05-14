@@ -17,16 +17,20 @@
       "**/*"
     ],
     "ios": {
-        "infoPlist":{
-            "UIBackgroundModes":["audio"]
-        },
-      "supportsTablet": false
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ]
+      },
+      "supportsTablet": false,
+      "bundleIdentifier": "com.noobify"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.noobify"
     },
     "web": {
       "favicon": "./assets/favicon.png"
