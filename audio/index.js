@@ -1,5 +1,6 @@
 import { Audio } from "expo-av";
 import api from "../api";
+import MusicControl from "react-native-music-control";
 
 let sound = null;
 let queues = [];
@@ -11,9 +12,20 @@ let playingAudioFullDuration = 0;
 let loaded = false;
 let universalThumb = "";
 
+let lastNotification = false;
+
 // Handlers
 let queueUpdateRecivers = [];
 let statusUpdateRecivers = [];
+
+// Notification settings
+MusicControl.enableControl("play", true);
+MusicControl.enableControl("pause", true);
+MusicControl.enableControl("stop", false);
+MusicControl.enableControl("nextTrack", true);
+MusicControl.enableControl("previousTrack", true);
+
+MusicControl.enableControl("changePlaybackPosition", true);
 
 const checkAvailable = async (id) => {
   if (caches[id]) {
@@ -26,6 +38,22 @@ const checkAvailable = async (id) => {
 
 const _playbackStatusUpdate = async (status) => {
   statusUpdateRecivers.forEach((reciever) => reciever(status));
+  if (status.isPlaying && !lastNotification) {
+    MusicControl.updatePlayback({
+      state: MusicControl.STATE_PLAYING,
+      speed: 1,
+      elapsedTime: parseInt(status.positionMillis / 1000),
+    });
+    lastNotification = true;
+  } else if (!status.isPlaying && lastNotification) {
+    MusicControl.updatePlayback({
+      state: MusicControl.STATE_PAUSED,
+      speed: 1,
+      elapsedTime: parseInt(status.positionMillis / 1000),
+    });
+    lastNotification = false;
+  }
+
   if (status.didJustFinish) {
     if (loaded) {
       await _unloadAudio();
@@ -35,7 +63,7 @@ const _playbackStatusUpdate = async (status) => {
       if (currentIndex >= queues.length) {
         currentIndex--;
       } else {
-        await _loadAudio(queues[currentIndex].id);
+        await _loadAudio(queues[currentIndex]);
         await sound.playAsync();
       }
     } else if (loopingMode === "all") {
@@ -43,10 +71,10 @@ const _playbackStatusUpdate = async (status) => {
       if (currentIndex >= queues.length) {
         currentIndex = 0;
       }
-      await _loadAudio(queues[currentIndex].id);
+      await _loadAudio(queues[currentIndex]);
       await sound.playAsync();
     } else if (loopingMode === "one") {
-      await _loadAudio(queues[currentIndex].id);
+      await _loadAudio(queues[currentIndex]);
       await sound.playAsync();
     }
   }
@@ -80,7 +108,7 @@ const setPlaying = async (playing) => {
       throw new Error("No queues to play");
     }
     if (loaded === false) {
-      await _loadAudio(queues[currentIndex].id);
+      await _loadAudio(queues[currentIndex]);
     } else {
       console.log("[Sound]", "Playing");
       await sound.playAsync();
@@ -101,7 +129,8 @@ const audioFullDuration = () => {
   return playingAudioFullDuration;
 };
 
-const _loadAudio = async (id) => {
+const _loadAudio = async (data) => {
+  const id = data.id;
   const isAvailable = await checkAvailable(id);
   console.log("[Sound]", "Checking", id);
   console.log(isAvailable, typeof isAvailable);
@@ -112,7 +141,7 @@ const _loadAudio = async (id) => {
     if (queues.length <= currentIndex) {
       throw new Error("No queues to play");
     }
-    return _loadAudio(queues[currentIndex].id);
+    return _loadAudio(queues[currentIndex]);
   }
 
   //for ios
@@ -133,7 +162,6 @@ const _loadAudio = async (id) => {
   console.log("[Sound]", "Loading", id);
   if (!loaded) {
     try {
-      
       await sound.loadAsync(
         {
           uri: `https://xonos.tools/getSpotifyTrack/${id}.mp3`,
@@ -142,9 +170,17 @@ const _loadAudio = async (id) => {
         false
       );
       loaded = true;
+      MusicControl.setNowPlaying({
+        title: data.name,
+        artwork: data.album.cover[0].url,
+        artist: data.artists[0].name,
+        album: data.album.name,
+        duration: parseInt(playingAudioFullDuration / 1000),
+        colorized: true,
+      });
     } catch (e) {
       loaded = false;
-      console.log("[Sound]", "Loading Error");
+      console.log("[Sound]", "Loading Error", e);
       await _unloadAudio();
     }
   } else {
@@ -181,7 +217,7 @@ const skip = async () => {
   if (loaded) {
     await _unloadAudio();
   }
-  await _loadAudio(queues[currentIndex].id);
+  await _loadAudio(queues[currentIndex]);
   await sound.playAsync();
 };
 
@@ -196,7 +232,7 @@ const back = async () => {
   if (loaded) {
     await _unloadAudio();
   }
-  await _loadAudio(queues[currentIndex].id);
+  await _loadAudio(queues[currentIndex]);
   await sound.playAsync();
 };
 
