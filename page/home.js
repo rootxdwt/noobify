@@ -10,6 +10,8 @@ import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import api from "../api";
 
+let cachedHomedata=[]
+
 export class Home extends Component {
   constructor(props) {
     super(props);
@@ -17,17 +19,24 @@ export class Home extends Component {
     this.state = {
       shelves: [],
     };
+    this.disableCache=false
   }
 
   componentDidMount = async () => {
-    this.mounted = true;
-    const {
-      data: { shelves },
-    } = await api.get("/recommendations", {
-      timeout: 10000,
-    });
-    console.log("[Shelves]", "Fetched");
-    if (this.mounted) this.setState({ shelves });
+    if(cachedHomedata.length==0 || this.disableCache){
+      this.mounted = true;
+      const {
+        data: { shelves },
+      } = await api.get("/recommendations", {
+        timeout: 10000,
+      });
+      console.log("[Shelves]", "Fetched");
+      cachedHomedata=shelves
+      if (this.mounted) this.setState({ shelves });
+    }else{
+      this.setState({ shelves: cachedHomedata });
+      console.log("[Shelves]", "Displayed cached data");
+    }
   };
 
   componentWillUnmount = () => {
@@ -36,7 +45,7 @@ export class Home extends Component {
 
   render() {
     return (
-      <ScrollView>
+      <ScrollView style={{backgroundColor: "#262626"}}>
         <View style={styles.Header}>
           <Text style={{ fontWeight: "bold", fontSize: 25, color: "#fff" }}>
             Noobify
@@ -244,9 +253,7 @@ export class Home extends Component {
                     return (
                       <View style={styles.MusicBox} key={item.id}>
                         <Pressable
-                          onPress={() =>
-                            this.props.showPlaylist(item.id, "playlist")
-                          }
+                        onPress={()=>this.props.navigation.navigate('Playlist',{id: item.id, type: item.description?"playlist":"album"})}
                         >
                           <Image
                             style={{ width: 130, height: 130, borderRadius: 5 }}

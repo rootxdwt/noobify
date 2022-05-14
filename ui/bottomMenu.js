@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import {navigate} from '../nonePropNav.js';
 
 const icons = {
   Home: [
@@ -24,6 +25,7 @@ const icons = {
   ],
 };
 
+
 export class BottomMenu extends Component {
   constructor(props) {
     super(props);
@@ -31,10 +33,10 @@ export class BottomMenu extends Component {
   }
 
   menuButtonPress(obj) {
+    navigate(['Home','Search','My'][obj],{})
     var lst = [1, 1, 1];
     lst[obj] = 0;
     this.setState({ Active: lst });
-    this.props.setPage(obj);
   }
 
   render() {
