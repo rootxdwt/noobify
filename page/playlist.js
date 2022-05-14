@@ -11,16 +11,14 @@ export class Playlist extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props.type);
-    console.log(this.props.id);
     console.log(
-      (this.props.type === "playlist" ? "/playlist/" : "/album/") +
-        this.props.id
+      (this.props.route.params.type === "playlist" ? "/playlist/" : "/album/") +
+      this.props.route.params.id
     );
     api
       .get(
-        (this.props.type === "playlist" ? "/playlist/" : "/album/") +
-          this.props.id
+        (this.props.route.params.type === "playlist" ? "/playlist/" : "/album/") +
+        this.props.route.params.id
       )
       .then((res) => {
         console.log("[Playlist]", "Fetched");
@@ -32,7 +30,7 @@ export class Playlist extends Component {
 
   playFromPlaylistIndex = async (index) => {
     if (this.state.data.songs) {
-      if (this.props.type == "album") {
+      if (this.props.route.params.type == "album") {
         await audioLibrary.setUniversalThumbnail(this.state.data.cover[0].url);
       }
       await audioLibrary.setQueue(this.state.data.songs);
@@ -48,21 +46,21 @@ export class Playlist extends Component {
     return (
       <>
         <Pressable
-          style={{ height: 50, justifyContent: "center" }}
+          style={{ height: 50, justifyContent: "center",backgroundColor: "#262626"}}
           onPress={() => {
-            this.prevPage();
+            this.props.navigation.goBack()
           }}
         >
           <Text style={{ color: "#fff", paddingLeft: 20, padding: 10 }}>
             <Icon name="arrow-back-ios" size={25} />
           </Text>
         </Pressable>
-        <ScrollView>
+        <ScrollView style={{backgroundColor: "#262626"}}>
           <View style={styles.Header}>
             <Image
               source={{
                 uri: this.state.data
-                  ? this.props.type == "playlist"
+                  ? this.props.route.params.type == "playlist"
                     ? this.state.data.songs[0].album.cover[0].url
                     : this.state.data.cover[0].url
                   : "https://i.ytimg.com/vi/Z-Q-Z-Q-Z-Q/maxresdefault.jpg",
@@ -71,14 +69,14 @@ export class Playlist extends Component {
             ></Image>
             <View style={{ marginLeft: 17, flex: 1, flexDirection: "column" }}>
               <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 20 }}>
-                {this.state.data ? this.state.data.name : "Loading..."}
+                {this.state.data ? this.state.data.name : "Loading.."}
               </Text>
               <Text style={{ color: "#949494" }} numberOfLines={1}>
                 {this.state.data
-                  ? this.props.type == "playlist"
+                  ? this.props.route.params.type == "playlist"
                     ? `${this.state.data.songs[0].artists[0].name} and more`
                     : this.state.data.artists.map((elem) => elem.name).join(",")
-                  : "Loading..."}
+                  : ""}
               </Text>
               <Pressable
                 style={{
@@ -121,7 +119,7 @@ export class Playlist extends Component {
                         style={{ width: 55, height: 55, borderRadius: 5 }}
                         source={{
                           uri:
-                            this.props.type == "playlist"
+                          this.props.route.params.type == "playlist"
                               ? item.album.cover[0].url
                               : this.state.data.cover[0].url,
                         }}
@@ -144,7 +142,7 @@ export class Playlist extends Component {
                         <Text
                           style={{ fontWeight: "normal", color: "#949494" }}
                         >
-                          {this.props.type == "playlist"
+                          {this.props.route.params.type == "playlist"
                             ? item.artists.map((elem) => elem.name).join(",")
                             : item.artist}
                         </Text>

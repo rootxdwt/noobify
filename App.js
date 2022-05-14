@@ -5,6 +5,7 @@ import { Home } from "./page/home.js";
 import { Search } from "./page/search.js";
 import { Playlist } from "./page/playlist.js";
 import { My } from "./page/my.js";
+import { navigationRef } from "./nonePropNav";
 import {
   StyleSheet,
   Text,
@@ -15,8 +16,10 @@ import {
 } from "react-native";
 import { Audio } from "expo-av";
 import audioLibrary from "./audio";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
-const pages = [<Home></Home>, <Search></Search>, <My></My>];
+const AppNavigation = createStackNavigator();
 
 export default class App extends React.Component {
   state = {
@@ -27,6 +30,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.prevPage = [];
+    this.cacheHome = [];
   }
 
   componentDidMount() {
@@ -40,6 +44,7 @@ export default class App extends React.Component {
     }
   }
 
+  cacheHomedata = (data) => {};
   getSound = async () => {
     return this.state.sound;
   };
@@ -57,6 +62,46 @@ export default class App extends React.Component {
     return (
       <SafeAreaView style={styles.ParentContainer}>
         <StatusBar barStyle="light-content" backgroundColor="#262626" />
+
+        <NavigationContainer ref={navigationRef}>
+          <AppNavigation.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <AppNavigation.Screen
+              name="Home"
+              component={Home}
+              options={{
+                animationEnabled: false,
+              }}
+            />
+            <AppNavigation.Screen
+              name="Search"
+              component={Search}
+              options={{
+                animationEnabled: false,
+              }}
+            />
+            <AppNavigation.Screen
+              name="My"
+              component={My}
+              options={{
+                animationEnabled: false,
+              }}
+            />
+            <AppNavigation.Screen name="Playlist" component={Playlist} />
+          </AppNavigation.Navigator>
+          <View style={styles.Container}>
+            <Player currentPlayingType={this.state.playlistType}></Player>
+            <BottomMenu setPage={this.setPage}></BottomMenu>
+          </View>
+        </NavigationContainer>
+      </SafeAreaView>
+    );
+  }
+}
+/*
         {this.state.playlist ? (
           <Playlist
             id={this.state.playlist}
@@ -70,16 +115,7 @@ export default class App extends React.Component {
             showPlaylist: this.showPlaylist,
           })
         )}
-
-        <View style={styles.Container}>
-          <Player currentPlayingType={this.state.playlistType}></Player>
-          <BottomMenu setPage={this.setPage}></BottomMenu>
-        </View>
-      </SafeAreaView>
-    );
-  }
-}
-
+*/
 const styles = StyleSheet.create({
   ParentContainer: {
     backgroundColor: "#262626",
@@ -89,7 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
     position: "absolute",
     bottom: 0,
-    backgroundColor: "#262626",
     alignItems: "center",
     width: "100%",
   },
