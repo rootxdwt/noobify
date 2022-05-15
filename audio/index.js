@@ -19,6 +19,8 @@ let queueUpdateRecivers = [];
 let statusUpdateRecivers = [];
 
 // Notification settings
+MusicControl.enableBackgroundMode(true)
+MusicControl.handleAudioInterruptions(true)
 MusicControl.enableControl("play", true);
 MusicControl.enableControl("pause", true);
 MusicControl.enableControl("stop", false);
@@ -145,7 +147,7 @@ const _loadAudio = async (data) => {
   }
 
   //for ios
-  await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+  await Audio.setAudioModeAsync({ playsInSilentModeIOS: true,staysActiveInBackground: true, });
 
   //UNCOMMENT BELOW ON PRODUCTION
 
@@ -169,7 +171,6 @@ const _loadAudio = async (data) => {
         { shouldPlay: true },
         false
       );
-      loaded = true;
       MusicControl.setNowPlaying({
         title: data.name,
         artwork: data.album.cover[0].url,
@@ -177,7 +178,10 @@ const _loadAudio = async (data) => {
         album: data.album.name,
         duration: parseInt(playingAudioFullDuration / 1000),
         colorized: true,
+        isLiveStream: false,
       });
+      console.log("notification set")
+      loaded = true;
     } catch (e) {
       loaded = false;
       console.log("[Sound]", "Loading Error", e);
