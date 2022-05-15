@@ -146,18 +146,7 @@ const _loadAudio = async (data) => {
     return _loadAudio(queues[currentIndex]);
   }
 
-  //for ios
   await Audio.setAudioModeAsync({ playsInSilentModeIOS: true,staysActiveInBackground: true, });
-
-  //UNCOMMENT BELOW ON PRODUCTION
-
-  /*
-  await Audio.setAudioModeAsync({
-    staysActiveInBackground: true,
-  });
-  */
-
-  //UNCOMMENT ABOVE ON PRODUCTION
 
   var resp = await api.get(`/song/${id}/`);
   playingAudioFullDuration = resp.data.duration;
