@@ -9,21 +9,22 @@ import {
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import api from "../api";
-
-let cachedHomedata=[]
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export class Home extends Component {
   constructor(props) {
     super(props);
     this.DOMList = [];
     this.state = {
       shelves: [],
+      userPlayed:[]
     };
-    this.disableCache=false
   }
 
   componentDidMount = async () => {
-    if(cachedHomedata.length==0 || this.disableCache){
+    this.props.navigation.addListener('focus', async() => {
+      this.setState({userPlayed:JSON.parse(await AsyncStorage.getItem("played")!=null?await AsyncStorage.getItem("played"):"[]")})
+    });
+    this.setState({userPlayed:JSON.parse(await AsyncStorage.getItem("played")!=null?await AsyncStorage.getItem("played"):"[]")})
       this.mounted = true;
       const {
         data: { shelves },
@@ -31,17 +32,13 @@ export class Home extends Component {
         timeout: 10000,
       });
       console.log("[Shelves]", "Fetched");
-      cachedHomedata=shelves
       if (this.mounted) this.setState({ shelves });
-    }else{
-      this.setState({ shelves: cachedHomedata });
-      console.log("[Shelves]", "Displayed cached data");
-    }
   };
 
   componentWillUnmount = () => {
     this.mounted = false;
   };
+
 
   render() {
     return (
@@ -152,81 +149,33 @@ export class Home extends Component {
           Songs
         </Text>
         <View style={{ flex: 1, flexDirection: "column", marginLeft: 10 }}>
-          <View style={styles.superWideMusicBox}>
-            <Image
-              style={{ width: 60, height: 60, borderRadius: 5 }}
-              source={{
-                uri: "https://cdn.xdcs.me/static/main/EZZP8m1U8AAfAyk.jpg",
-              }}
-            ></Image>
-            <View
-              style={{
-                flex: 1,
-                alignItems: "flex-start",
-                flexDirection: "column",
-                marginLeft: 10,
-              }}
-            >
-              <Text style={{ fontWeight: "bold", color: "#fff" }}>
-                MORE AND MORE
-              </Text>
-              <Text style={{ fontWeight: "normal", color: "#949494" }}>
-                Single-TWICE
-              </Text>
-            </View>
-          </View>
-          <View style={styles.superWideMusicBox}>
-            <Image
-              style={{ width: 60, height: 60, borderRadius: 5 }}
-              source={{
-                uri: "https://cdn.xdcs.me/static/main/11ce49830b65761f2d0725eddaccc3cc.jpg",
-              }}
-            ></Image>
-            <View
-              style={{
-                flex: 1,
-                alignItems: "flex-start",
-                flexDirection: "column",
-                marginLeft: 10,
-              }}
-            >
-              <Text style={{ fontWeight: "bold", color: "#fff" }}>
-                WHAT IS LOVE
-              </Text>
-              <Text style={{ fontWeight: "normal", color: "#949494" }}>
-                Album-TWICE
-              </Text>
-            </View>
-          </View>
-          <View style={styles.superWideMusicBox}>
-            <Image
-              style={{ width: 60, height: 60, borderRadius: 5 }}
-              source={{
-                uri: "https://cdn.xdcs.me/static/main/Dhl2AOUUcAABtwH.jpg",
-              }}
-            ></Image>
-            <View
-              style={{
-                flex: 1,
-                alignItems: "flex-start",
-                flexDirection: "column",
-                marginLeft: 10,
-              }}
-            >
-              <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 14 }}>
-                SUMMER NIGHTS
-              </Text>
-              <Text
+          {this.state.userPlayed.map((item,index)=>{
+            return(
+              <Pressable style={styles.superWideMusicBox} key={index}>
+              <Image
+                style={{ width: 60, height: 60, borderRadius: 5 }}
+                source={{
+                  uri: item.thumb,
+                }}
+              ></Image>
+              <View
                 style={{
-                  fontWeight: "normal",
-                  color: "#949494",
-                  fontSize: 14,
+                  flex: 1,
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                  marginLeft: 10,
                 }}
               >
-                Album-TWICE
-              </Text>
-            </View>
-          </View>
+                <Text style={{ fontWeight: "bold", color: "#fff" }}>
+                  {item.name}
+                </Text>
+                <Text style={{ fontWeight: "normal", color: "#949494" }}>
+                 {item.album}
+                </Text>
+              </View>
+            </Pressable>
+            )
+          })}
         </View>
         <View style={styles.Main}>
           {this.state.shelves.map((shelf) => {

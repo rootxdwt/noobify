@@ -1,10 +1,10 @@
 import { Audio } from "expo-av";
 import api from "../api";
 import MusicControl from "react-native-music-control";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let sound = null;
 let queues = [];
-let caches = {};
 let isPlaying = false;
 let loopingMode = "none";
 let currentIndex = 0;
@@ -29,13 +29,29 @@ MusicControl.enableControl("previousTrack", true);
 
 MusicControl.enableControl("changePlaybackPosition", true);
 
-const checkAvailable = async (id) => {
-  if (caches[id]) {
-    return caches[id];
+const setListened = async(id,album,name,thumb) =>{
+  if(await AsyncStorage.getItem("played")==null){
+    await AsyncStorage.setItem("played","[]")
   }
-  var resp = await api.get(`/song/${id}/available`);
-  var tf = resp.data.available;
-  return tf;
+  var saved = JSON.parse(await AsyncStorage.getItem("played"))
+  var isExisting
+  if(saved.map((item)=>{if(item.id==id){isExisting=true}}))
+  if(saved.length>2){
+    saved = saved.slice(1,3)
+  }
+  if(!isExisting){
+    saved.push({id:id, album:album, name:name, thumb:thumb})
+    await AsyncStorage.setItem("played", JSON.stringify(saved))
+  }
+}
+const checkAvailable = async (id) => {
+  try{
+    var resp = await api.get(`/song/${id}/available`);
+    var tf = resp.data.available;
+    return tf;
+  }catch(e){
+    console.log("Failed checking audio: ",e)
+  }
 };
 
 const _playbackStatusUpdate = async (status) => {
@@ -66,7 +82,6 @@ const _playbackStatusUpdate = async (status) => {
         currentIndex--;
       } else {
         await _loadAudio(queues[currentIndex]);
-        await sound.playAsync();
       }
     } else if (loopingMode === "all") {
       currentIndex++;
@@ -74,10 +89,8 @@ const _playbackStatusUpdate = async (status) => {
         currentIndex = 0;
       }
       await _loadAudio(queues[currentIndex]);
-      await sound.playAsync();
     } else if (loopingMode === "one") {
       await _loadAudio(queues[currentIndex]);
-      await sound.playAsync();
     }
   }
 };
@@ -123,7 +136,11 @@ const setPlaying = async (playing) => {
 
 const stopPlaying = async () => {
   console.log("[Sound]", "Stopping");
-  await sound.stopAsync();
+  try{
+    await sound.stopAsync();
+  }catch(e){
+    console.log("failed Stopping",e)
+  }
   playing = false;
 };
 
@@ -132,6 +149,7 @@ const audioFullDuration = () => {
 };
 
 const _loadAudio = async (data) => {
+  console.log(data.id)
   const id = data.id;
   const isAvailable = await checkAvailable(id);
   console.log("[Sound]", "Checking", id);
@@ -155,22 +173,13 @@ const _loadAudio = async (data) => {
     try {
       await sound.loadAsync(
         {
-          uri: `https://xonos.tools/getSpotifyTrack/${id}.mp3`,
+          uri: `https://api.noobify.workers.dev/song/${id}/audio`,
         },
         { shouldPlay: true },
         false
       );
-      MusicControl.setNowPlaying({
-        title: data.name,
-        artwork: data.album.cover[0].url,
-        artist: data.artists[0].name,
-        album: data.album.name,
-        duration: parseInt(playingAudioFullDuration / 1000),
-        colorized: true,
-        isLiveStream: false,
-      });
-      console.log("notification set")
       loaded = true;
+      await setListened(id, data.album.name, data.name, data.album!=undefined?data.album.cover[0].url:getUniversalThumbnail())
     } catch (e) {
       loaded = false;
       console.log("[Sound]", "Loading Error", e);
@@ -185,7 +194,12 @@ const _loadAudio = async (data) => {
 const _unloadAudio = async () => {
   loaded = false;
   console.log("[Sound]", "Unloading");
-  await sound.unloadAsync();
+  try{
+    await sound.unloadAsync();
+  }catch(e){
+    console.log("failed Unloading",e)
+  }
+  console.log("[Sound]", "Unloaded");
 };
 
 const setQueue = async (newQueue) => {
@@ -211,7 +225,6 @@ const skip = async () => {
     await _unloadAudio();
   }
   await _loadAudio(queues[currentIndex]);
-  await sound.playAsync();
 };
 
 const back = async () => {
@@ -226,7 +239,6 @@ const back = async () => {
     await _unloadAudio();
   }
   await _loadAudio(queues[currentIndex]);
-  await sound.playAsync();
 };
 
 const getIndex = () => {
@@ -242,10 +254,6 @@ const setIndex = async (value) => {
 
 const setPosition = async (position) => {
   try {
-    // await sound.setPositionAsync(position, {
-    //   toleranceMillisBefore: 0,
-    //   toleranceMillisAfter: 0,
-    // });
     await sound.setStatusAsync({
       positionMillis: position,
       seekMillisToleranceBefore: 0,
@@ -312,6 +320,7 @@ module.exports = {
   audioFullDuration,
   setUniversalThumbnail,
   getUniversalThumbnail,
+  setListened
 };
 
 console.log("[Sound]", "Initialized sound");

@@ -190,7 +190,7 @@ export class Player extends Component {
       (e.nativeEvent.pageX - this.state.progressBarStartPos) /
       (this.interfaceX * 0.8);
     if (this.playingStat / 100 + draggedProg <= 1) {
-      if(this.playingStat / 100 + draggedProg <= 0){
+      if (this.playingStat / 100 + draggedProg <= 0) {
         this.setState({ playingProgress: 0 });
       }
       this.setState({ playingProgress: this.playingStat + draggedProg * 100 });
@@ -199,13 +199,12 @@ export class Player extends Component {
       this.setState({ playingProgress: 100 });
     }
   };
-  ReleaseProgressBar = async(e) => {
+  ReleaseProgressBar = async (e) => {
     var draggedProg =
-    (e.nativeEvent.pageX - this.state.progressBarStartPos) /
-    (this.interfaceX * 0.8);
+      (e.nativeEvent.pageX - this.state.progressBarStartPos) /
+      (this.interfaceX * 0.8);
     await audioLibrary.setPosition(
-      (this.playingStat / 100 + draggedProg) *
-        audioLibrary.audioFullDuration()
+      (this.playingStat / 100 + draggedProg) * audioLibrary.audioFullDuration()
     );
     await audioLibrary.setPlaying(true);
     this.setState({ isProgressBarDragging: false });
@@ -274,97 +273,137 @@ export class Player extends Component {
   }
 
   render() {
-    const current = this.state.queue[this.state.index] || {
-      album: {
-        cover: [
-          {
-            url: "https://i.ytimg.com/vi/Z-Q-Z-Q-Z-Q/maxresdefault.jpg",
-          },
-        ],
-      },
-      artists: [
-        {
-          name: "Unknown",
-        },
-      ],
-      name: "No song playing",
-    };
+    const current = this.state.queue[this.state.index]
     return (
       <>
-        <View
-          style={{
-            backgroundColor: "transparent",
-            width: "100%",
-            height: this.state.height,
-            bottom: this.state.bottom,
-          }}
-        ></View>
-        <Animated.View
-          style={{
-            flex: 1,
-            flexDirection: "column",
-            width: this.state.width * 100 + "%",
-            height: this.state.height,
-            borderRadius: this.state.borderRadius,
-            backgroundColor: this.state.backgroundColorIndex.interpolate({
-              inputRange: [0, 1],
-              outputRange: [this.state.prevBg, this.state.backgroundColor],
-            }),
-            position: "absolute",
-            bottom: this.state.bottom,
-            overflow: "hidden",
-            zIndex: 1,
-          }}
-          onMoveShouldSetResponder={() => true}
-          onResponderGrant={(e) => this.startMove(e)}
-          onResponderMove={(e) => this.Move(e)}
-          onResponderRelease={(e) => this.Release(e)}
-        >
+        {this.state.queue[this.state.index] ? (
+          <><>
           <View
             style={{
-              flex: 1,
-              flexDirection: "row",
-              height: "100%",
-              alignItems: "center",
-              justifyContent: "center",
+              backgroundColor: "transparent",
+              width: "100%",
+              height: this.state.height,
+              bottom: this.state.bottom,
             }}
+            on
+          ></View>
+          <Animated.View
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              width: this.state.width * 100 + "%",
+              height: this.state.height,
+              borderRadius: this.state.borderRadius,
+              backgroundColor: this.state.backgroundColorIndex.interpolate({
+                inputRange: [0, 1],
+                outputRange: [this.state.prevBg, this.state.backgroundColor],
+              }),
+              position: "absolute",
+              bottom: this.state.bottom,
+              overflow: "hidden",
+              zIndex: 1,
+            }}
+            onMoveShouldSetResponder={() => true}
+            onResponderGrant={(e) => this.startMove(e)}
+            onResponderMove={(e) => this.Move(e)}
+            onResponderRelease={(e) => this.Release(e)}
           >
-            <Image
+            <View
               style={{
-                height:
-                  40 + (this.interfaceX - 150) * this.state.draggedPercentage,
-                width:
-                  40 + (this.interfaceX - 150) * this.state.draggedPercentage,
-                marginLeft: this.state.maximized
-                  ? (this.interfaceX -
-                      (40 +
-                        (this.interfaceX - 150) *
-                          this.state.draggedPercentage)) /
-                    2
-                  : 7,
-                marginTop: 300 * this.state.draggedPercentage,
-                borderRadius: 8,
-                marginRight: 10,
+                flex: 1,
+                flexDirection: "row",
+                height: "100%",
+                alignItems: "center",
+                justifyContent: "center",
               }}
-              source={{
-                uri:
-                  "album" in current
-                    ? current.album.cover[0].url
-                    : audioLibrary.getUniversalThumbnail() == ""
-                    ? "https://i.ytimg.com/vi/Z-Q-Z-Q-Z-Q/maxresdefault.jpg"
-                    : audioLibrary.getUniversalThumbnail(),
-              }}
-            ></Image>
+            >
+              <Image
+                style={{
+                  height:
+                    40 +
+                    (this.interfaceX - 150) * this.state.draggedPercentage,
+                  width:
+                    40 +
+                    (this.interfaceX - 150) * this.state.draggedPercentage,
+                  marginLeft: this.state.maximized
+                    ? (this.interfaceX -
+                        (40 +
+                          (this.interfaceX - 150) *
+                            this.state.draggedPercentage)) /
+                      2
+                    : 7,
+                  marginTop: 300 * this.state.draggedPercentage,
+                  borderRadius: 8,
+                  marginRight: 10,
+                }}
+                source={{
+                  uri:
+                    "album" in current
+                      ? current.album.cover[0].url
+                      : audioLibrary.getUniversalThumbnail() == ""
+                      ? "https://i.ytimg.com/vi/Z-Q-Z-Q-Z-Q/maxresdefault.jpg"
+                      : audioLibrary.getUniversalThumbnail(),
+                }}
+              ></Image>
 
-            <View style={styles.SongInfo}>
+              <View style={styles.SongInfo}>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={{
+                    width: "93%",
+                    color: "#fff",
+                    fontWeight: "bold",
+                    opacity: 1 - this.state.draggedPercentage,
+                  }}
+                >
+                  {current.name}
+                </Text>
+                <Text
+                  style={{
+                    color: "#fff",
+                    opacity: 1 - this.state.draggedPercentage,
+                  }}
+                >
+                  {current.artists.map((artist) => artist.name).join(", ")}
+                </Text>
+              </View>
+              <View style={{ marginRight: 18 }}>
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontSize: 13,
+                    opacity: 1 - this.state.draggedPercentage,
+                  }}
+                  onPress={() => this.togglePlay()}
+                >
+                  {playpause[this.state.play]}
+                </Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                padding: 0,
+                margin: 0,
+                bottom: 0,
+                marginTop: 300 * this.state.draggedPercentage,
+                display: this.state.maximized ? "flex" : "none",
+              }}
+            >
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
                 style={{
-                  width: "93%",
+                  maxWidth: "90%",
                   color: "#fff",
+                  fontSize: 25,
                   fontWeight: "bold",
-                  opacity: 1 - this.state.draggedPercentage,
+                  opacity: this.state.draggedPercentage,
                 }}
               >
                 {current.name}
@@ -372,142 +411,95 @@ export class Player extends Component {
               <Text
                 style={{
                   color: "#fff",
-                  opacity: 1 - this.state.draggedPercentage,
+                  fontSize: 15,
+                  opacity: this.state.draggedPercentage,
                 }}
               >
                 {current.artists.map((artist) => artist.name).join(", ")}
               </Text>
-            </View>
-            <View style={{ marginRight: 18 }}>
-              <Text
+              <View
+                onMoveShouldSetResponder={() => true}
+                onResponderGrant={(e) => this.ChangeProgressBarState(e)}
+                onResponderMove={(e) => this.MoveProgressBar(e)}
+                onResponderTerminationRequest={() => false}
+                onResponderRelease={(e) => this.ReleaseProgressBar(e)}
                 style={{
-                  color: "#fff",
-                  fontSize: 13,
-                  opacity: 1 - this.state.draggedPercentage,
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
                 }}
-                onPress={() => this.togglePlay()}
               >
-                {playpause[this.state.play]}
-              </Text>
-            </View>
-          </View>
+                <ProgressBar
+                  opacity={this.state.draggedPercentage}
+                  currentProgress={this.state.playingProgress}
+                  isProgressBarDragging={this.state.isProgressBarDragging}
+                ></ProgressBar>
+              </View>
 
-          <View
-            style={{
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-              padding: 0,
-              margin: 0,
-              bottom: 0,
-              marginTop: 300 * this.state.draggedPercentage,
-              display: this.state.maximized ? "flex" : "none",
-            }}
-          >
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={{
-                maxWidth: "90%",
-                color: "#fff",
-                fontSize: 25,
-                fontWeight: "bold",
-                opacity: this.state.draggedPercentage,
-              }}
-            >
-              {current.name}
-            </Text>
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 15,
-                opacity: this.state.draggedPercentage,
-              }}
-            >
-              {current.artists.map((artist) => artist.name).join(", ")}
-            </Text>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  margin: 30,
+                  overflow: "hidden",
+                }}
+              >
+                <Text
+                  style={{
+                    color:
+                      0 < this.state.index && !this.state.skipping
+                        ? "#fff"
+                        : "#505050",
+                    height: 25,
+                  }}
+                  onPress={() => this.previous()}
+                >
+                  <Icon name="backward" size={25}></Icon>
+                </Text>
+                <Text
+                  onPress={() => this.togglePlay()}
+                  style={{
+                    color: "#fff",
+                    marginLeft: 50,
+                    marginRight: 50,
+                    height: 50,
+                  }}
+                >
+                  {largeplaypause[this.state.play]}
+                </Text>
+                <Text
+                  style={{
+                    color:
+                      this.state.queue.length > this.state.index + 1 &&
+                      !this.state.skipping
+                        ? "#fff"
+                        : "#505050",
+                    height: 25,
+                  }}
+                >
+                  <Icon
+                    name="forward"
+                    size={25}
+                    onPress={() => this.next()}
+                  ></Icon>
+                </Text>
+              </View>
+            </View>
+
             <View
-              onMoveShouldSetResponder={() => true}
-              onResponderGrant={(e) => this.ChangeProgressBarState(e)}
-              onResponderMove={(e) => this.MoveProgressBar(e)}
-              onResponderTerminationRequest={() => false}
-              onResponderRelease={(e) => this.ReleaseProgressBar(e)}
               style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
+                width: this.state.playingProgress + "%",
+                height: 2,
+                backgroundColor: "#fff",
+                opacity: 1 - this.state.draggedPercentage,
               }}
-            >
-            <ProgressBar
-              opacity={this.state.draggedPercentage}
-              currentProgress={this.state.playingProgress}
-              isProgressBarDragging={this.state.isProgressBarDragging}
-            ></ProgressBar>
-            </View>
-
-
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "center",
-                margin: 30,
-                overflow: "hidden",
-              }}
-            >
-              <Text
-                style={{
-                  color:
-                    0 < this.state.index && !this.state.skipping
-                      ? "#fff"
-                      : "#505050",
-                  height: 25,
-                }}
-                onPress={() => this.previous()}
-              >
-                <Icon name="backward" size={25}></Icon>
-              </Text>
-              <Text
-                onPress={() => this.togglePlay()}
-                style={{
-                  color: "#fff",
-                  marginLeft: 50,
-                  marginRight: 50,
-                  height: 50,
-                }}
-              >
-                {largeplaypause[this.state.play]}
-              </Text>
-              <Text
-                style={{
-                  color:
-                    this.state.queue.length > this.state.index + 1 &&
-                    !this.state.skipping
-                      ? "#fff"
-                      : "#505050",
-                  height: 25,
-                }}
-              >
-                <Icon
-                  name="forward"
-                  size={25}
-                  onPress={() => this.next()}
-                ></Icon>
-              </Text>
-            </View>
-          </View>
-
-          <View
-            style={{
-              width: this.state.playingProgress + "%",
-              height: 2,
-              backgroundColor: "#fff",
-              opacity: 1 - this.state.draggedPercentage,
-            }}
-          ></View>
-        </Animated.View>
+            ></View>
+          </Animated.View>
+        </></>
+        ) : (<></>
+        )}
       </>
     );
   }
