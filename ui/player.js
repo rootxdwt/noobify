@@ -5,6 +5,7 @@ import {
   Image,
   Dimensions,
   Animated,
+  Easing
 } from "react-native";
 import { Component } from "react/cjs/react.production.min";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -72,6 +73,7 @@ export class Player extends Component {
       skipping: false,
       playingId: "",
       backgroundColorIndex: new Animated.Value(0),
+      playerBottomIndex: new Animated.Value(0),
       backgroundColor: "#364954",
       playingProgress: 0,
       isProgressBarDragging: false,
@@ -106,6 +108,7 @@ export class Player extends Component {
     });
     if (status.positionMillis === 0) {
       this.applyBackgroundColor();
+      this.showPlayer()
     }
     this.setState({
       play: status.isPlaying === true ? 1 : 0,
@@ -258,6 +261,13 @@ export class Player extends Component {
     this.setState({ width: 0.95 });
     this.setState({ draggedPercentage: 0 });
   }
+  showPlayer(){
+    Animated.timing(this.state.playerBottomIndex, {
+      toValue: 1,
+      duration: 250,
+      useNativeDriver: false,
+    }).start();
+  }
   Release() {
     var n;
     if (!this.state.maximized) {
@@ -285,7 +295,7 @@ export class Player extends Component {
               height: this.state.height,
               bottom: this.state.bottom,
             }}
-            on
+            
           ></View>
           <Animated.View
             style={{
@@ -299,7 +309,11 @@ export class Player extends Component {
                 outputRange: [this.state.prevBg, this.state.backgroundColor],
               }),
               position: "absolute",
-              bottom: this.state.bottom,
+              bottom: this.state.playerBottomIndex.interpolate({
+                inputRange: [0, 1],
+                outputRange: [-60, this.state.bottom],
+              }),
+
               overflow: "hidden",
               zIndex: 1,
             }}
