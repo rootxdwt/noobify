@@ -170,7 +170,7 @@ export class Home extends Component {
                   {item.name}
                 </Text>
                 <Text style={{ fontWeight: "normal", color: "#949494" }}>
-                 {item.album}
+                 {item.artist}
                 </Text>
               </View>
             </Pressable>

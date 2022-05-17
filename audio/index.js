@@ -29,7 +29,7 @@ MusicControl.enableControl("previousTrack", true);
 
 MusicControl.enableControl("changePlaybackPosition", true);
 
-const setListened = async(id,album,name,thumb) =>{
+const setListened = async(id,artist,name,thumb) =>{
   if(await AsyncStorage.getItem("played")==null){
     await AsyncStorage.setItem("played","[]")
   }
@@ -40,7 +40,7 @@ const setListened = async(id,album,name,thumb) =>{
     saved = saved.slice(1,3)
   }
   if(!isExisting){
-    saved.push({id:id, album:album, name:name, thumb:thumb})
+    saved.push({id:id, artist:artist, name:name, thumb:thumb})
     await AsyncStorage.setItem("played", JSON.stringify(saved))
   }
 }
@@ -179,7 +179,7 @@ const _loadAudio = async (data) => {
         false
       );
       loaded = true;
-      await setListened(id, data.album.name, data.name, data.album!=undefined?data.album.cover[0].url:getUniversalThumbnail())
+      await setListened(id, data.artists.map((elem) => elem.name).join(","), data.name, data.album!=undefined?data.album.cover[0].url:getUniversalThumbnail())
     } catch (e) {
       loaded = false;
       console.log("[Sound]", "Loading Error", e);
