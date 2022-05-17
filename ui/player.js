@@ -95,6 +95,13 @@ export class Player extends Component {
     audioLibrary.unregisterStatusUpdateReciver(this.statusHandler);
   };
 
+  hidePlayer = () =>{
+    Animated.timing(this.state.playerBottomIndex, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }
   statusHandler = async (status) => {
     if (status.isPlaying === true) {
       this.playingStat =
@@ -109,6 +116,11 @@ export class Player extends Component {
     if (status.positionMillis === 0) {
       this.applyBackgroundColor();
       this.showPlayer()
+    }
+    if(status.isLoaded==false){
+      if(this.state.maximized!=true){
+        this.hidePlayer()
+      }
     }
     this.setState({
       play: status.isPlaying === true ? 1 : 0,
@@ -263,7 +275,8 @@ export class Player extends Component {
   showPlayer(){
     Animated.timing(this.state.playerBottomIndex, {
       toValue: 1,
-      duration: 250,
+      duration: 200,
+      easing:Easing.ease,
       useNativeDriver: false,
     }).start();
   }
