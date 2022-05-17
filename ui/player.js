@@ -118,6 +118,7 @@ export class Player extends Component {
   };
 
   applyBackgroundColor = async () => {
+    console.log("currentindex",this.state.index)
     const current = this.state.queue[this.state.index];
     if (current) {
       const images = (
@@ -149,36 +150,28 @@ export class Player extends Component {
     }).start();
   };
 
-  previous() {
+  previous=async()=> {
     console.log("[Player]", "Previous track");
+    await audioLibrary.stopPlaying()
     if (this.state.index > 0) {
       if (!this.state.skipping) {
-        this.state.skipping = true;
-        audioLibrary
-          .back()
-          .then(() => {
-            this.state.skipping = false;
-          })
-          .catch(() => {
-            this.state.skipping = false;
-          });
+        this.setState({skipping:true})
+        await audioLibrary.setIndex(this.state.index-1)
+        this.setState({skipping:false})
+        await audioLibrary.setPlaying(true);
       }
     }
   }
 
-  next() {
+  next=async()=> {
     console.log("[Player]", "Next track");
+    await audioLibrary.stopPlaying()
     if (this.state.queue.length > this.state.index + 1) {
       if (!this.state.skipping) {
-        this.state.skipping = true;
-        audioLibrary
-          .skip()
-          .then(() => {
-            this.state.skipping = false;
-          })
-          .catch(() => {
-            this.state.skipping = false;
-          });
+        this.setState({skipping:true})
+        await audioLibrary.setIndex(this.state.index+1)
+        this.setState({skipping:false})
+        await audioLibrary.setPlaying(true);
       }
     }
   }
@@ -214,16 +207,22 @@ export class Player extends Component {
   };
 
   togglePlay() {
-    var n;
-    switch (this.state.play) {
-      case 1:
-        n = false;
-        break;
-      case 0:
-        n = true;
-        break;
+    var isSoundLoaded = audioLibrary.isSoundLoaded
+    if(isSoundLoaded){
+      var n;
+      switch (this.state.play) {
+        case 1:
+          n = false;
+          break;
+        case 0:
+          n = true;
+          break;
+      }
+      audioLibrary.setPlaying(n);
+    }else{
+      console.log("Cannot set playing status: Sound is not loaded")
     }
-    audioLibrary.setPlaying(n);
+
   }
 
   startMove(e) {
@@ -283,10 +282,10 @@ export class Player extends Component {
   }
 
   render() {
-    const current = this.state.queue[this.state.index]
+    var current = this.state.queue[this.state.index]
     return (
       <>
-        {this.state.queue[this.state.index] ? (
+        {current ? (
           <><>
           <View
             style={{

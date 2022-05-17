@@ -252,6 +252,10 @@ const setIndex = async (value) => {
   currentIndex = value;
 };
 
+const isSoundLoaded = ()=>{
+  return loaded
+}
+
 const setPosition = async (position) => {
   try {
     await sound.setStatusAsync({
@@ -320,7 +324,8 @@ module.exports = {
   audioFullDuration,
   setUniversalThumbnail,
   getUniversalThumbnail,
-  setListened
+  setListened,
+  isSoundLoaded
 };
 
 console.log("[Sound]", "Initialized sound");
