@@ -16,7 +16,7 @@ class Item extends Component {
     const { id } = this.props.data;
     console.log("[Item]", this.props.type, id);
     if (this.props.type === "playlist" || this.props.type === "album") {
-      this.props.showPlaylist('Playlist',{id: id, type: this.props.type})
+      this.props.showPlaylist("Playlist", { id: id, type: this.props.type });
     } else {
       const available = true;
 
@@ -40,12 +40,15 @@ class Item extends Component {
         }}
       >
         <View style={styles.Content}>
-          <Image
-            style={{ width: 50, height: 50, borderRadius: 5 }}
-            source={{
-              uri: this.props.image,
-            }}
-          ></Image>
+          <View style={{ backgroundColor: "#363636", borderRadius: 5 }}>
+            <Image
+              style={{ width: 50, height: 50, borderRadius: 5 }}
+              source={{
+                uri: this.props.image,
+              }}
+            ></Image>
+          </View>
+
           <View style={styles.Details}>
             <Text
               style={{
@@ -133,192 +136,67 @@ export class Search extends Component {
 
   render() {
     return (
-      <View style={{ height: "100%", backgroundColor:"#262626" }}>
-        <View style={styles.Header}>
-          <Text style={{ fontWeight: "bold", fontSize: 25, color: "#fff" }}>
-            Search
-          </Text>
+      <View style={{ height: "100%", backgroundColor: "#262626" }}>
+        <ScrollView
+          contentContainerStyle={styles.Main}
+          stickyHeaderIndices={[1]}
+        >
+          <View style={styles.Header}>
+            <Text style={{ fontWeight: "bold", fontSize: 25, color: "#fff" }}>
+              Search
+            </Text>
+          </View>
+          <View style={{width: "100%", backgroundColor: "#262626"}}>
           <TextInput
-            style={styles.SearchBar}
-            onChangeText={this.onQueryChange}
-            value={this.state.query}
-            placeholder="Search Artist, Song Or An Album"
-          />
-        </View>
-        <View style={{ height: "70%" }}>
-          <ScrollView contentContainerStyle={styles.Main}>
-            <View style={{ height: 10 }}></View>
-            {(this.state.total.length > 0 && (
-              <Text
+              style={styles.SearchBar}
+              onChangeText={this.onQueryChange}
+              value={this.state.query}
+              placeholder="Search Artist, Song Or An Album"
+            />
+          </View>
+
+          <View style={{ height: 10 }}></View>
+          {(this.state.total.length > 0 && (
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 20,
+                color: "#fff",
+                alignSelf: "flex-start",
+                margin: 10,
+                marginTop: 5,
+              }}
+            >
+              Top Results
+            </Text>
+          )) ||
+            (this.state.query &&
+            !this.state.isRequesting &&
+            this.state.query !== "" ? (
+              <View
                 style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: "#fff",
-                  alignSelf: "flex-start",
-                  margin: 10,
-                  marginTop: 5,
+                  flex: 1,
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                Top Results
-              </Text>
-            )) ||
-              (this.state.query &&
-              !this.state.isRequesting &&
-              this.state.query !== "" ? (
-                <View
+                <Text
                   style={{
-                    flex: 1,
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    color: "#fff",
+                    alignSelf: "center",
+                    margin: 10,
+                    marginTop: 5,
                   }}
                 >
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 20,
-                      color: "#fff",
-                      alignSelf: "center",
-                      margin: 10,
-                      marginTop: 5,
-                    }}
-                  >
-                    No Results
-                  </Text>
-                </View>
-              ) : null)}
-            {this.state.total.map((item) => {
-              if (item.type == "artist") {
-                return (
-                  <Item
-                    showPlaylist={this.props.navigation.navigate}
-                    key={item.id}
-                    title={item.name}
-                    image={
-                      item.avatar.length > 0
-                        ? item.avatar[0].url
-                        : "https://media.istockphoto.com/vectors/people-icon-person-icon-user-icon-in-trendy-flat-style-isolated-on-vector-id1166184350?k=20&m=1166184350&s=170667a&w=0&h=-OcfPNeTuiR5dJNM6ahYx3PgxevGi00akHF1J_Dq-rA="
-                    }
-                    description={`Artist`}
-                    type="artist"
-                    data={item}
-                  />
-                );
-              } else if (item.type == "album") {
-                return (
-                  <Item
-                    showPlaylist={this.props.navigation.navigate}
-                    key={item.id}
-                    title={item.name}
-                    image={item.cover[0].url}
-                    description={`Album • ${item.artists
-                      .map((artist) => artist.name)
-                      .join(", ")}`}
-                    type="album"
-                    data={item}
-                  />
-                );
-              } else if (item.type == "playlist") {
-                return (
-                  <Item
-                    showPlaylist={this.props.navigation.navigate}
-                    key={item.id}
-                    title={item.name}
-                    image={item.cover[0].url}
-                    description={`Playlist`}
-                    type="playlist"
-                    data={item}
-                  />
-                );
-              } else if (item.type == "track") {
-                return (
-                  <Item
-                    showPlaylist={this.props.navigation.navigate}
-                    key={item.id}
-                    title={item.name}
-                    image={item.album.cover[0].url}
-                    description={`Song • ${item.artists
-                      .map((artist) => artist.name)
-                      .join(", ")}`}
-                    type="song"
-                    data={item}
-                  />
-                );
-              }
-            })}
-            {this.state.songs.length > 0 && (
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: "#fff",
-                  alignSelf: "flex-start",
-                  margin: 10,
-                  marginTop: 5,
-                }}
-              >
-                Songs
-              </Text>
-            )}
-            {this.state.songs.map((item) => {
-              return (
-                <Item
-                  showPlaylist={this.props.navigation.navigate}
-                  key={item.id}
-                  title={item.name}
-                  image={item.album.cover[0].url}
-                  description={`Song • ${item.artists
-                    .map((artist) => artist.name)
-                    .join(", ")}`}
-                  type="song"
-                  data={item}
-                />
-              );
-            })}
-            {this.state.albums.length > 0 && (
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: "#fff",
-                  alignSelf: "flex-start",
-                  margin: 10,
-                  marginTop: 5,
-                }}
-              >
-                Albums
-              </Text>
-            )}
-            {this.state.albums.map((item) => {
-              return (
-                <Item
-                  showPlaylist={this.props.navigation.navigate}
-                  key={item.id}
-                  title={item.name}
-                  image={item.cover[0].url}
-                  description={`Album • ${item.artists
-                    .map((artist) => artist.name)
-                    .join(", ")}`}
-                  type="album"
-                  data={item}
-                />
-              );
-            })}
-            {this.state.artists.length > 0 && (
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: "#fff",
-                  alignSelf: "flex-start",
-                  margin: 10,
-                  marginTop: 5,
-                }}
-              >
-                Artists
-              </Text>
-            )}
-            {this.state.artists.map((item) => {
+                  No Results
+                </Text>
+              </View>
+            ) : null)}
+          {this.state.total.map((item) => {
+            if (item.type == "artist") {
               return (
                 <Item
                   showPlaylist={this.props.navigation.navigate}
@@ -334,22 +212,21 @@ export class Search extends Component {
                   data={item}
                 />
               );
-            })}
-            {this.state.playlists.length > 0 && (
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  color: "#fff",
-                  alignSelf: "flex-start",
-                  margin: 10,
-                  marginTop: 5,
-                }}
-              >
-                Playlists
-              </Text>
-            )}
-            {this.state.playlists.map((item) => {
+            } else if (item.type == "album") {
+              return (
+                <Item
+                  showPlaylist={this.props.navigation.navigate}
+                  key={item.id}
+                  title={item.name}
+                  image={item.cover[0].url}
+                  description={`Album • ${item.artists
+                    .map((artist) => artist.name)
+                    .join(", ")}`}
+                  type="album"
+                  data={item}
+                />
+              );
+            } else if (item.type == "playlist") {
               return (
                 <Item
                   showPlaylist={this.props.navigation.navigate}
@@ -361,10 +238,140 @@ export class Search extends Component {
                   data={item}
                 />
               );
-            })}
-            <View style={{ height: 100 }}></View>
-          </ScrollView>
-        </View>
+            } else if (item.type == "track") {
+              return (
+                <Item
+                  showPlaylist={this.props.navigation.navigate}
+                  key={item.id}
+                  title={item.name}
+                  image={item.album.cover[0].url}
+                  description={`Song • ${item.artists
+                    .map((artist) => artist.name)
+                    .join(", ")}`}
+                  type="song"
+                  data={item}
+                />
+              );
+            }
+          })}
+          {this.state.songs.length > 0 && (
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 20,
+                color: "#fff",
+                alignSelf: "flex-start",
+                margin: 10,
+                marginTop: 5,
+              }}
+            >
+              Songs
+            </Text>
+          )}
+          {this.state.songs.map((item) => {
+            return (
+              <Item
+                showPlaylist={this.props.navigation.navigate}
+                key={item.id}
+                title={item.name}
+                image={item.album.cover[0].url}
+                description={`Song • ${item.artists
+                  .map((artist) => artist.name)
+                  .join(", ")}`}
+                type="song"
+                data={item}
+              />
+            );
+          })}
+          {this.state.albums.length > 0 && (
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 20,
+                color: "#fff",
+                alignSelf: "flex-start",
+                margin: 10,
+                marginTop: 5,
+              }}
+            >
+              Albums
+            </Text>
+          )}
+          {this.state.albums.map((item) => {
+            return (
+              <Item
+                showPlaylist={this.props.navigation.navigate}
+                key={item.id}
+                title={item.name}
+                image={item.cover[0].url}
+                description={`Album • ${item.artists
+                  .map((artist) => artist.name)
+                  .join(", ")}`}
+                type="album"
+                data={item}
+              />
+            );
+          })}
+          {this.state.artists.length > 0 && (
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 20,
+                color: "#fff",
+                alignSelf: "flex-start",
+                margin: 10,
+                marginTop: 5,
+              }}
+            >
+              Artists
+            </Text>
+          )}
+          {this.state.artists.map((item) => {
+            return (
+              <Item
+                showPlaylist={this.props.navigation.navigate}
+                key={item.id}
+                title={item.name}
+                image={
+                  item.avatar.length > 0
+                    ? item.avatar[0].url
+                    : "https://media.istockphoto.com/vectors/people-icon-person-icon-user-icon-in-trendy-flat-style-isolated-on-vector-id1166184350?k=20&m=1166184350&s=170667a&w=0&h=-OcfPNeTuiR5dJNM6ahYx3PgxevGi00akHF1J_Dq-rA="
+                }
+                description={`Artist`}
+                type="artist"
+                data={item}
+              />
+            );
+          })}
+          {this.state.playlists.length > 0 && (
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 20,
+                color: "#fff",
+                alignSelf: "flex-start",
+                margin: 10,
+                marginTop: 5,
+              }}
+            >
+              Playlists
+            </Text>
+          )}
+          {this.state.playlists.map((item) => {
+            return (
+              <Item
+                showPlaylist={this.props.navigation.navigate}
+                key={item.id}
+                title={item.name}
+                image={item.cover[0].url}
+                description={`Playlist`}
+                type="playlist"
+                data={item}
+              />
+            );
+          })}
+          <View style={{ height: 100 }}></View>
+        </ScrollView>
       </View>
     );
   }
@@ -382,11 +389,10 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "column",
     alignItems: "flex-start",
-    justifyContent: "space-between",
-    padding: 25,
+    justifyContent: "center",
     paddingLeft: 12,
     paddingRight: 12,
-    height: 150,
+    height: 100,
     paddingBottom: 0,
   },
   Content: {
@@ -405,9 +411,10 @@ const styles = StyleSheet.create({
   SearchBar: {
     height: 40,
     margin: 10,
-    width: "99%",
+    width: "90%",
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#404040",
+    color: "#fff",
     borderRadius: 10,
     alignSelf: "center",
   },

@@ -57,6 +57,7 @@ export class Playlist extends Component {
         </Pressable>
         <ScrollView style={{backgroundColor: "#262626"}}>
           <View style={styles.Header}>
+            <View style={{backgroundColor:"#363636", borderRadius: 5}}>
             <Image
               source={{
                 uri: this.state.data
@@ -67,6 +68,7 @@ export class Playlist extends Component {
               }}
               style={{ width: 150, height: 150, borderRadius: 5 }}
             ></Image>
+            </View>
             <View style={{ marginLeft: 17, flex: 1, flexDirection: "column" }}>
               <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 20 }}>
                 {this.state.data ? this.state.data.name : "Loading.."}
@@ -115,6 +117,7 @@ export class Playlist extends Component {
                       key={item.id}
                       onPress={() => this.playFromPlaylistIndex(index)}
                     >
+                      <View style={{backgroundColor: "#363636", borderRadius: 5}}>
                       <Image
                         style={{ width: 55, height: 55, borderRadius: 5 }}
                         source={{
@@ -124,6 +127,8 @@ export class Playlist extends Component {
                               : this.state.data.cover[0].url,
                         }}
                       ></Image>
+                      </View>
+
                       <View
                         style={{
                           flex: 1,
@@ -150,7 +155,8 @@ export class Playlist extends Component {
                     </Pressable>
                   );
                 })
-              : null}
+              : <>
+              </>}
           </View>
         </ScrollView>
       </>
