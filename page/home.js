@@ -152,12 +152,14 @@ export class Home extends Component {
           {this.state.userPlayed.map((item,index)=>{
             return(
               <Pressable style={styles.superWideMusicBox} key={index}>
-              <Image
+                <View style={{backgroundColor:"#363636", borderRadius: 5, overflow: "hidden",width: 60, height: 60,}}>
+                <Image
                 style={{ width: 60, height: 60, borderRadius: 5 }}
                 source={{
                   uri: item.thumb,
                 }}
               ></Image>
+                </View>
               <View
                 style={{
                   flex: 1,
@@ -204,12 +206,14 @@ export class Home extends Component {
                         <Pressable
                         onPress={()=>this.props.navigation.navigate('Playlist',{id: item.id, type: item.description?"playlist":"album"})}
                         >
+                          <View style={{backgroundColor:"#363636", borderRadius: 5, overflow: "hidden",width: 130, height: 130}}>
                           <Image
                             style={{ width: 130, height: 130, borderRadius: 5 }}
                             source={{
                               uri: item.cover[0].url,
                             }}
                           ></Image>
+                          </View>
                           <View
                             style={{
                               flex: 1,

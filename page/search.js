@@ -55,8 +55,10 @@ class Item extends Component {
                 fontWeight: "bold",
                 fontSize: 15,
                 color: "#fff",
+                width: "80%"
               }}
               numberOfLines={1}
+              ellipsizeMode="tail"
             >
               {this.props.title}
             </Text>
@@ -194,7 +196,12 @@ export class Search extends Component {
                   No Results
                 </Text>
               </View>
-            ) : null)}
+            ) : <>
+            <View style={{flex:1, flexDirection: "row", justifyContent: "space-evenly", width: "100%", flexWrap: "wrap"}}>
+              
+            </View>
+            
+            </>)}
           {this.state.total.map((item) => {
             if (item.type == "artist") {
               return (
@@ -407,6 +414,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
+    width: "100%"
   },
   SearchBar: {
     height: 40,
