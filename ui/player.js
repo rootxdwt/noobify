@@ -6,7 +6,7 @@ import {
   Dimensions,
   Animated,
 } from "react-native";
-import { Component } from "react/cjs/react.production.min";
+import { Component } from "react";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import audioLibrary from "../audio";
 import api from "../api";
@@ -189,12 +189,12 @@ export class Player extends Component {
     var draggedProg =
       (e.nativeEvent.pageX - this.state.progressBarStartPos) /
       (this.interfaceX * 0.8);
-    if (this.playingStat / 100 + draggedProg <= 1) {
-      if(this.playingStat / 100 + draggedProg <= 0){
-        this.setState({ playingProgress: 0 });
-      }
+    const newProgress = this.playingStat / 100 + draggedProg;
+    
+    if (newProgress >= 0 && newProgress <= 1) {
       this.setState({ playingProgress: this.playingStat + draggedProg * 100 });
-      //console.log((this.playingStat/100+draggedProg)*audioLibrary.audioFullDuration())
+    } else if (newProgress < 0) {
+      this.setState({ playingProgress: 0 });
     } else {
       this.setState({ playingProgress: 100 });
     }
@@ -203,9 +203,11 @@ export class Player extends Component {
     var draggedProg =
     (e.nativeEvent.pageX - this.state.progressBarStartPos) /
     (this.interfaceX * 0.8);
+    const newProgress = this.playingStat / 100 + draggedProg;
+    const clampedProgress = Math.max(0, Math.min(1, newProgress));
+    
     await audioLibrary.setPosition(
-      (this.playingStat / 100 + draggedProg) *
-        audioLibrary.audioFullDuration()
+      clampedProgress * audioLibrary.audioFullDuration()
     );
     await audioLibrary.setPlaying(true);
     this.setState({ isProgressBarDragging: false });

@@ -94,7 +94,7 @@ const setPlaying = async (playing) => {
 const stopPlaying = async () => {
   console.log("[Sound]", "Stopping");
   await sound.stopAsync();
-  playing = false;
+  isPlaying = false;
 };
 
 const audioFullDuration = () => {
@@ -109,8 +109,12 @@ const _loadAudio = async (id) => {
     console.log("[Sound]", "Song is not available");
     queues = queues.filter((q) => q.id !== id);
     queueUpdateRecivers.forEach((reciever) => reciever(queues));
-    if (queues.length <= currentIndex) {
+    if (queues.length === 0 || currentIndex >= queues.length) {
       throw new Error("No queues to play");
+    }
+    // Adjust currentIndex if it's out of bounds
+    if (currentIndex >= queues.length) {
+      currentIndex = queues.length - 1;
     }
     return _loadAudio(queues[currentIndex].id);
   }
@@ -144,8 +148,9 @@ const _loadAudio = async (id) => {
       loaded = true;
     } catch (e) {
       loaded = false;
-      console.log("[Sound]", "Loading Error");
+      console.log("[Sound]", "Loading Error:", e.message || e);
       await _unloadAudio();
+      throw new Error(`Failed to load audio: ${e.message || e}`);
     }
   } else {
     console.log("[Sound]", "Unmount current audio before playing a new one");
