@@ -6,7 +6,7 @@ import {
   Dimensions,
   Animated,
 } from "react-native";
-import { Component } from "react/cjs/react.production.min";
+import { Component } from "react";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import audioLibrary from "../audio";
 import api from "../api";
@@ -190,10 +190,11 @@ export class Player extends Component {
       (e.nativeEvent.pageX - this.state.progressBarStartPos) /
       (this.interfaceX * 0.8);
     if (this.playingStat / 100 + draggedProg <= 1) {
-      if(this.playingStat / 100 + draggedProg <= 0){
+      if(this.playingStat / 100 + draggedProg >= 0){
+        this.setState({ playingProgress: this.playingStat + draggedProg * 100 });
+      } else {
         this.setState({ playingProgress: 0 });
       }
-      this.setState({ playingProgress: this.playingStat + draggedProg * 100 });
       //console.log((this.playingStat/100+draggedProg)*audioLibrary.audioFullDuration())
     } else {
       this.setState({ playingProgress: 100 });
