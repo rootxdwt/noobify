@@ -1,6 +1,5 @@
 import { Audio } from "expo-av";
 import api from "../api";
-import MusicNotificationManager from "./notifications";
 
 let sound = null;
 let queues = [];
@@ -35,16 +34,9 @@ const _playbackStatusUpdate = async (status) => {
       currentIndex++;
       if (currentIndex >= queues.length) {
         currentIndex--;
-        // Hide notification when queue ends
-        await MusicNotificationManager.hideMusicNotification();
       } else {
         await _loadAudio(queues[currentIndex].id);
         await sound.playAsync();
-        // Update notification for new song
-        const currentSong = queues[currentIndex];
-        if (currentSong) {
-          await MusicNotificationManager.updateMusicNotification(currentSong, true);
-        }
       }
     } else if (loopingMode === "all") {
       currentIndex++;
@@ -53,19 +45,9 @@ const _playbackStatusUpdate = async (status) => {
       }
       await _loadAudio(queues[currentIndex].id);
       await sound.playAsync();
-      // Update notification for new song
-      const currentSong = queues[currentIndex];
-      if (currentSong) {
-        await MusicNotificationManager.updateMusicNotification(currentSong, true);
-      }
     } else if (loopingMode === "one") {
       await _loadAudio(queues[currentIndex].id);
       await sound.playAsync();
-      // Update notification for repeated song
-      const currentSong = queues[currentIndex];
-      if (currentSong) {
-        await MusicNotificationManager.updateMusicNotification(currentSong, true);
-      }
     }
   }
 };
@@ -103,19 +85,9 @@ const setPlaying = async (playing) => {
       console.log("[Sound]", "Playing");
       await sound.playAsync();
     }
-    // Update notification when playing
-    const currentSong = queues[currentIndex];
-    if (currentSong) {
-      await MusicNotificationManager.updateMusicNotification(currentSong, true);
-    }
   } else {
     console.log("[Sound]", "Pausing");
     await sound.pauseAsync();
-    // Update notification when paused
-    const currentSong = queues[currentIndex];
-    if (currentSong) {
-      await MusicNotificationManager.updateMusicNotification(currentSong, false);
-    }
   }
 };
 
@@ -123,8 +95,6 @@ const stopPlaying = async () => {
   console.log("[Sound]", "Stopping");
   await sound.stopAsync();
   isPlaying = false;
-  // Hide notification when stopping
-  await MusicNotificationManager.hideMusicNotification();
 };
 
 const audioFullDuration = () => {
@@ -139,8 +109,12 @@ const _loadAudio = async (id) => {
     console.log("[Sound]", "Song is not available");
     queues = queues.filter((q) => q.id !== id);
     queueUpdateRecivers.forEach((reciever) => reciever(queues));
-    if (queues.length <= currentIndex) {
+    if (queues.length === 0 || currentIndex >= queues.length) {
       throw new Error("No queues to play");
+    }
+    // Adjust currentIndex if it's out of bounds
+    if (currentIndex >= queues.length) {
+      currentIndex = queues.length - 1;
     }
     return _loadAudio(queues[currentIndex].id);
   }
@@ -214,11 +188,6 @@ const skip = async () => {
   }
   await _loadAudio(queues[currentIndex].id);
   await sound.playAsync();
-  // Update notification for skipped song
-  const currentSong = queues[currentIndex];
-  if (currentSong) {
-    await MusicNotificationManager.updateMusicNotification(currentSong, true);
-  }
 };
 
 const back = async () => {
@@ -234,11 +203,6 @@ const back = async () => {
   }
   await _loadAudio(queues[currentIndex].id);
   await sound.playAsync();
-  // Update notification for previous song
-  const currentSong = queues[currentIndex];
-  if (currentSong) {
-    await MusicNotificationManager.updateMusicNotification(currentSong, true);
-  }
 };
 
 const getIndex = () => {
@@ -300,23 +264,6 @@ const unregisterStatusUpdateReciver = (reciever) => {
   statusUpdateRecivers = statusUpdateRecivers.filter((r) => r !== reciever);
 };
 
-const cleanup = async () => {
-  console.log("[Sound]", "Cleaning up audio library");
-  try {
-    if (sound && loaded) {
-      await _unloadAudio();
-    }
-    // Clear all event listeners
-    queueUpdateRecivers = [];
-    statusUpdateRecivers = [];
-    // Hide notification
-    await MusicNotificationManager.hideMusicNotification();
-    console.log("[Sound]", "Cleanup completed");
-  } catch (error) {
-    console.log("[Sound]", "Error during cleanup:", error.message);
-  }
-};
-
 module.exports = {
   getSound,
   setSound,
@@ -341,7 +288,6 @@ module.exports = {
   audioFullDuration,
   setUniversalThumbnail,
   getUniversalThumbnail,
-  cleanup,
 };
 
 console.log("[Sound]", "Initialized sound");
